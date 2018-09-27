@@ -7,64 +7,66 @@ import {
   FormGroup,
   Label,
   Input,
+  InputGroup,
+  InputGroupAddon,
+  Button,
   FormFeedback
 } from "reactstrap";
+import PlacesAutocomplete, {
+  geocodeByAddress,
+  getLatLng
+} from "react-places-autocomplete";
 import { withRouter } from "react-router-dom";
 import moment from "moment";
 import DatePicker from "react-datepicker";
 import "../css/react-datepicker.css";
 import onInputChange from "../utilities/onInputChange";
 import validateEmail from "../utilities/validateEmail";
+import { CreateStory } from "../services/story.service";
 //import queryString from "querystring";
 
-class CreateTimeBlock extends Component {
+class SubmitStory extends Component {
   state = {
     inEditMode: false,
     menuOpen: false,
     deleteWarning: false,
-    activityTypeId: "",
-    title: "",
+    thankeeName: "",
+    posterName: "",
     location: "",
+    latitude: null,
+    longitude: null,
+    isGeocoding: false,
     description: "",
-    guestName: "",
-    guestEmail: "",
-    startDate: moment().local(), // set moment("2018-08-16"),
-    startTime: moment("08:00", "HH:mm"), //new Date(new Date().setHours(new Date().getHours() + 1))), //set 24 HR moment("20:00:00.00000", "HH:mm")
-    endDate: moment().local(),
-    endTime: moment()
+    thankeeEmail: "",
+    storyDate: moment().local(), // set moment("2018-08-16"),
+    publishDate: moment().local(),
+    notifyDate: moment().local(),
+    notifyTime: moment()
       .local()
       .add(30, "minutes"), //new Date(new Date().setHours(new Date().getHours() + 2)))
     validation: {
-      title: true,
-      activity: true,
-      guestEmail: true,
-      dateRange: true
+      thankeeName: true,
+      thankeeEmail: true,
+      dateRange: true,
+      posterName: true,
+      location: true
     }
   };
 
   componentDidMount() {
     // get all activities
+    const now = moment().local();
+    console.log(now.format("YYYY-MM-DD[T]HH:mm:ssZ"));
 
     const setFormValues = () => {
-      let inLeadMode = false;
-      if (this.state.timeBlock.leadId) {
-        inLeadMode = true;
-      }
       this.setState({
-        startDate: moment(this.state.timeBlock.startDate.substr(0, 10)),
-        startTime: moment(this.state.timeBlock.startTime, "HH:mm"),
-        endDate: moment(this.state.timeBlock.endDate.substr(0, 10)),
-        endTime: moment(this.state.timeBlock.endTime, "HH:mm"),
-        title: this.state.timeBlock.title,
+        storyDate: moment(this.state.timeBlock.storyDate.substr(0, 10)),
+        notifyDate: moment(this.state.timeBlock.notifyDate.substr(0, 10)),
+        notifyTime: moment(this.state.timeBlock.notifyTime, "HH:mm"),
+        thankeeName: this.state.timeBlock.thankeeName,
         location: this.state.timeBlock.location || "",
         description: this.state.timeBlock.description || "",
-        leadId: this.state.timeBlock.leadId || "",
-        guestName: this.state.timeBlock.guestName || "",
-        guestEmail: this.state.timeBlock.guestEmail || "",
-        isAllDay: this.state.timeBlock.allDay,
-        isCanceled: this.state.timeBlock.canceled,
-        activityTypeId: this.state.timeBlock.activityTypeId,
-        inLeadMode
+        thankeeEmail: this.state.timeBlock.thankeeEmail || ""
       });
     };
 
@@ -77,40 +79,41 @@ class CreateTimeBlock extends Component {
   } // END of DidMount
 
   getFormData = () => {
-    let EndDate = moment(this.state.endDate).format("YYYY-MM-DD");
-    if (this.state.isAllDay) {
-      if (this.state.startDate !== this.state.endDate) {
-        EndDate = moment(this.state.endDate)
-          .add(1, "days")
-          .format("YYYY-MM-DD");
-      }
-    }
-    const timeBlockData = {
-      Title: this.state.title,
-      Location: this.state.location,
-      Description: this.state.description,
-      GuestName: this.state.guestName,
-      GuestEmail: this.state.guestEmail,
-      activityTypeId: this.state.activityTypeId,
-      StartDate: moment(this.state.startDate).format("YYYY-MM-DD"),
-      StartTime: moment(this.state.startTime).format("HH:mm"),
-      EndDate, // needed for unique all day events
-      EndTime: moment(this.state.endTime).format("HH:mm"),
-      AllDay: this.state.isAllDay,
-      Canceled: this.state.isCanceled,
-      ActivityCategory: this.getActivityCategory()
+    // to-do? notificate date + time + validation?
+    const formData = {
+      thankeeName: this.state.thankeeName,
+      location: this.state.location,
+      latitude: this.state.latitude.toString(),
+      longitude: this.state.longitude.toString(),
+      description: this.state.description,
+      posterName: this.state.posterName,
+      thankeeEmail: this.state.thankeeEmail,
+      storyDate: moment(this.state.storyDate).format("YYYY-MM-DD"),
+      publishDate: this.state.publishDate.format("YYYY-MM-DD")
+      //dateTimeZone: this.state.publishDate.format("YYYY-MM-DD[T]HH:mm:ssZ")
     };
     if (this.state.inEditMode) {
-      timeBlockData.id = this.state.timeBlock.id;
+      // insert ID+value into object
     }
-    if (this.state.leadId) {
-      timeBlockData.LeadId = parseInt(this.state.leadId);
-    } else {
-      timeBlockData.LeadId = this.state.timeBlock.leadId;
-    }
-    //console.log(this.getActivityCategory());
+    return formData;
+  };
 
-    return timeBlockData;
+  handleMapsAutocomplete = location => {
+    let nameOnly = location.substr(0, location.indexOf(","));
+    this.setState({ location: nameOnly });
+    geocodeByAddress(location)
+      .then(results => getLatLng(results[0]))
+      .then(latLng => {
+        this.setState({
+          latitude: latLng.lat,
+          longitude: latLng.lng
+        });
+      })
+      .catch(error => console.error("Error", error));
+  };
+
+  autoCompleteChange = location => {
+    this.setState({ location });
   };
 
   updateInputValue = onInputChange.bind(this);
@@ -133,7 +136,7 @@ class CreateTimeBlock extends Component {
               onClick={() => {
                 this.setState({ isCanceled: !this.state.isCanceled });
               }}
-              // disabled={this.state.isCanceled} // remove ability to unmark as canceled?
+              //  // remove ability to unmark as canceled?
             >
               {(this.state.isCanceled && "Unmark as ") || "Mark as "}
               Canceled
@@ -153,12 +156,27 @@ class CreateTimeBlock extends Component {
     );
   };
 
+  remainingCharacters = () =>
+    `You have ${3000 - this.state.description.length} remaining characters`;
+
   handleSubmission = () => {
     if (this.state.inEditMode) {
       //edit mode
     } else {
-      // new creation
+      let data = this.getFormData();
+      CreateStory(data)
+        .then(resp => console.log(resp))
+        .catch(err => console.log(err));
     }
+  };
+
+  resetLocation = () => {
+    this.setState({
+      location: "",
+      latitude: null,
+      longitude: null,
+      isGeocoding: false
+    });
   };
 
   confirmedDeleteEvent = () => {
@@ -181,47 +199,37 @@ class CreateTimeBlock extends Component {
   };
 
   validateInputs = () => {
-    const { title, activityTypeId, guestEmail, validation } = this.state;
-    //check title length
-    title.length > 0 ? (validation.title = true) : (validation.title = false);
-    //check selected activity
-    Number.isInteger(parseInt(activityTypeId))
-      ? (validation.activity = true)
-      : (validation.activity = false);
-    if (guestEmail) {
-      validateEmail(guestEmail)
-        ? (validation.guestEmail = true)
-        : (validation.guestEmail = false);
+    const { thankeeName, thankeeEmail, validation } = this.state;
+    //check thankeeName length
+    thankeeName.length > 0
+      ? (validation.thankeeName = true)
+      : (validation.thankeeName = false);
+    if (thankeeEmail) {
+      validateEmail(thankeeEmail)
+        ? (validation.thankeeEmail = true)
+        : (validation.thankeeEmail = false);
+    } else {
+      validation.thankeeEmail = true;
     }
     this.setState({ validation });
   };
 
   allValid = () => {
-    let startDate = moment(this.state.startDate).format("YYYY-MM-DD");
-    let startTime = moment(this.state.startTime).format("HH:mm");
-    let endDate = moment(this.state.endDate).format("YYYY-MM-DD");
-    let endTime = moment(this.state.endTime).format("HH:mm");
-    let start = new Date(`${startDate} ${startTime}`);
-    let end = new Date(`${endDate} ${endTime}`);
+    let storyDate = moment(this.state.storyDate).format("YYYY-MM-DD");
+    let notifyDate = moment(this.state.notifyDate).format("YYYY-MM-DD");
+    let notifyTime = moment(this.state.notifyTime).format("HH:mm");
+    let start = new Date(`${storyDate}`);
+    let end = new Date(`${notifyDate} ${notifyTime}`);
     let dateRange = false;
-    if (this.state.isAllDay) {
-      if (this.state.startDate <= this.state.endDate) {
-        dateRange = true;
-      }
-    } else {
-      if (start < end) {
-        dateRange = true;
-      }
-    }
     if (start < end) {
       dateRange = true;
     }
     const { validation } = this.state;
     validation.dateRange = dateRange;
     if (
-      validation.title &&
+      validation.thankeeName &&
       validation.activity &&
-      validation.guestEmail &&
+      validation.thankeeEmail &&
       dateRange
     ) {
       return true;
@@ -234,7 +242,7 @@ class CreateTimeBlock extends Component {
   render() {
     return (
       <div className="col-xl-5 col-lg-6 col-md-7 col-sm-10 col-xs-12 mx-auto">
-        <div className="jr-entry-header">{/*adds padding to title*/}</div>
+        <div className="jr-entry-header">{/*adds padding to thankeeName*/}</div>
         <div className="jr-card">
           <div
             className=""
@@ -249,102 +257,55 @@ class CreateTimeBlock extends Component {
           >
             {this.state.inEditMode && this.insertEditMenuButton()}
           </div>
-          {/* <div className="mx-auto">
-                  <h1
-                    className="title text-center"
-                    style={{
-                      position: "relative",
-                      top: "0.4em",
-                      marginBottom: "-0.1em"
-                    }}
-                  >
-                    {(this.state.inEditMode && "Update Event") ||
-                      "Create Event"}
-                  </h1>
-                </div> */}
+          <div className="mx-auto">
+            <h1
+              className="thankeeName text-center"
+              style={{
+                position: "relative",
+                top: "-0.4em",
+                marginBottom: "0.5em"
+              }}
+            >
+              {(this.state.inEditMode && "Update Your Story") ||
+                "Submit A Thank You Story"}
+            </h1>
+          </div>
           {this.state.inEditMode && <br />}
           <FormGroup>
-            <Label>Person/Organization You Would Like to Thank</Label>
+            <Label>Person/Organization You Would Like To Thank</Label>
             <Input
               type="text"
-              name="title"
+              name="thankeeName"
               maxLength="100"
-              value={this.state.title}
-              disabled={this.state.isCanceled}
+              value={this.state.thankeeName}
               onBlur={this.validateInputs}
               onChange={e => {
                 this.setState({ [e.target.name]: e.target.value }, () => {
-                  if (!this.state.validation.title) {
+                  if (!this.state.validation.thankeeName) {
                     this.validateInputs();
                   }
                 });
               }}
-              //valid={this.state.validation.title}
-              invalid={!this.state.validation.title}
+              //valid={this.state.validation.thankeeName}
+              invalid={!this.state.validation.thankeeName}
               required
             />
             <FormFeedback valid />
             <FormFeedback>This field is required</FormFeedback>
           </FormGroup>
-          <div className="form-group">
-            <label>&nbsp;Location Where This Took Place</label>
-            <input
-              className="form-control"
-              name="location"
-              maxLength="100"
-              value={this.state.location}
-              onChange={this.updateInputValue}
-              disabled={this.state.isCanceled}
-            />
-          </div>
-          {/* <FormGroup>
-                    <Label>Activity</Label>
-                    <Input
-                      type="select"
-                      name="activityTypeId"
-                      value={this.state.activityTypeId}
-                      disabled={this.state.isCanceled}
-                      onChange={e => {
-                        this.setState({ [e.target.name]: e.target.value }, () =>
-                          this.validateInputs()
-                        );
-                      }}
-                      disabled={this.state.isCanceled}
-                      //valid={this.state.validation.activity}
-                      invalid={!this.state.validation.activity}
-                    >
-                      <option>Select an Activity</option>
-                      {(
-                        (this.state.inLeadMode &&
-                          this.state.leadActivitiesOnly) ||
-                        this.state.activityTypes ||
-                        []
-                      ).map(activity => this.populateActivityBox(activity))}
-                    </Input>
-                    <FormFeedback valid />
-                    <FormFeedback>This field is required</FormFeedback>
-                  </FormGroup> */}
           <div className="form-group" style={{ minWidth: "22em" }}>
-            <label>&nbsp;Date When This Took Place</label>
+            <label>&nbsp;Date Of This Story</label>
             <div className="form-row">
               <div className="col" style={{ maxWidth: "28%", minWidth: "9em" }}>
                 <DatePicker
-                  selected={this.state.startDate}
-                  onChange={date => {
-                    if (date > this.state.endDate) {
-                      this.setState({
-                        startDate: date,
-                        endDate: date
-                      });
-                    } else {
-                      this.setState({
-                        startDate: date
-                      });
-                    }
-                  }}
+                  selected={this.state.storyDate}
+                  onChange={date =>
+                    this.setState({
+                      storyDate: date
+                    })
+                  }
                   className="form-control text-center"
                   dateFormat="MMM D[,] YYYY"
-                  disabled={this.state.isCanceled}
                   maxDate={moment().local()}
                   showMonthDropdown
                   showYearDropdown
@@ -354,37 +315,136 @@ class CreateTimeBlock extends Component {
             </div>
           </div>
           <div className="form-group">
-            <label>&nbsp;Description</label>
+            <label>&nbsp;Location Of This Story</label>
+            <PlacesAutocomplete
+              value={this.state.location}
+              onChange={this.autoCompleteChange}
+              onSelect={this.handleMapsAutocomplete}
+            >
+              {({
+                getInputProps,
+                suggestions,
+                getSuggestionItemProps,
+                loading
+              }) => (
+                <div className="form-group">
+                  <InputGroup>
+                    <Input
+                      maxLength={100}
+                      {...getInputProps({
+                        placeholder: "Search for a Location"
+                      })}
+                    />
+                    <InputGroupAddon addonType="append">
+                      <Button color="danger" onClick={this.resetLocation}>
+                        x
+                      </Button>
+                    </InputGroupAddon>
+                  </InputGroup>
+                  {suggestions.length > 0 && (
+                    <div className="autocomplete-dropdown-container">
+                      {loading && <div>Loading...</div>}
+                      {suggestions.map(suggestion => {
+                        const className = suggestion.active
+                          ? "suggestion-item--active"
+                          : "suggestion-item";
+                        const style = suggestion.active
+                          ? {
+                              backgroundColor: "#e8e8e8",
+                              cursor: "pointer",
+                              margin: "0.3em"
+                            }
+                          : {
+                              backgroundColor: "#ffffff",
+                              cursor: "pointer",
+                              margin: "0.3em"
+                            };
+                        return (
+                          <div
+                            {...getSuggestionItemProps(suggestion, {
+                              className,
+                              style
+                            })}
+                          >
+                            <span>{suggestion.description}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
+            </PlacesAutocomplete>
+          </div>
+          <div className="form-group">
+            <label>&nbsp;Your Thank You Story</label>
             <textarea
               className="form-control"
               name="description"
-              maxLength="500"
+              maxLength="3000"
               value={this.state.description}
               onChange={this.updateInputValue}
-              rows="3"
-              disabled={this.state.isCanceled}
+              rows="10"
             />
+            {this.state.description.length > 2500 && (
+              <React.Fragment>
+                <small>
+                  &nbsp;
+                  {this.remainingCharacters()}
+                </small>
+              </React.Fragment>
+            )}
           </div>
-          {/* <div className="form-group">
-                    <label>&nbsp;Guest Name</label>
-                    <input
-                      className="form-control"
-                      name="guestName"
-                      maxLength="151"
-                      value={this.state.guestName}
-                      onChange={this.updateInputValue}
-                      disabled={this.state.isCanceled}
-                    />
-                  </div> */}
+          <FormGroup>
+            <Label>Sincerely,</Label>
+            <Input
+              type="text"
+              name="posterName"
+              maxLength="100"
+              placeholder="Your Name Here"
+              value={this.state.posterName}
+              onBlur={this.validateInputs}
+              onChange={e => {
+                this.setState({ [e.target.name]: e.target.value }, () => {
+                  if (!this.state.validation.thankeeName) {
+                    this.validateInputs();
+                  }
+                });
+              }}
+              //valid={this.state.validation.thankeeName}
+              invalid={!this.state.validation.posterName}
+              required
+            />
+            <FormFeedback valid />
+            <FormFeedback>This field is required</FormFeedback>
+          </FormGroup>
+          <div className="form-group" style={{ minWidth: "22em" }}>
+            <label>&nbsp;Publication Date</label>
+            <div className="form-row">
+              <div className="col" style={{ maxWidth: "28%", minWidth: "9em" }}>
+                <DatePicker
+                  selected={this.state.publishDate}
+                  onChange={date =>
+                    this.setState({
+                      publishDate: date
+                    })
+                  }
+                  className="form-control text-center"
+                  dateFormat="MMM D[,] YYYY"
+                  minDate={moment().local()}
+                  maxDate={moment().add(1, "years")}
+                />
+              </div>
+            </div>
+          </div>
           <FormGroup>
             <Label>&nbsp;Notify The Recipient of This Story</Label>
             <Input
               type="text"
-              name="guestEmail"
+              name="thankeeEmail"
               placeholder="Email Address (optional)"
               maxLength="100"
-              value={this.state.guestEmail}
-              disabled={this.state.isCanceled}
+              value={this.state.thankeeEmail}
               onChange={e => {
                 this.setState({ [e.target.name]: e.target.value }, () => {
                   setTimeout(() => {
@@ -392,35 +452,34 @@ class CreateTimeBlock extends Component {
                   }, 900);
                 });
               }}
-              invalid={!this.state.validation.guestEmail}
+              invalid={!this.state.validation.thankeeEmail}
             />
             <FormFeedback valid />
             <FormFeedback>Invalid email address(es)</FormFeedback>
           </FormGroup>
-          <div className="form-group" style={{ minWidth: "22em" }}>
+          {/* <div className="form-group" style={{ minWidth: "22em" }}>
             <label>&nbsp;Select When to Send a Notification Email</label>
             <div className="form-row">
               <div className="col" style={{ maxWidth: "28%", minWidth: "9em" }}>
                 <DatePicker
-                  selected={this.state.endDate}
+                  selected={this.state.notifyDate}
                   onChange={date => {
                     this.setState({
-                      endDate: date
+                      notifyDate: date
                     });
                   }}
                   className="form-control text-center"
                   dateFormat="MMM D[,] YYYY"
-                  disabled={this.state.isCanceled}
                   minDate={moment().local()}
                   maxDate={moment().add(1, "year")}
                 />
               </div>
               <div className="col" style={{ maxWidth: "25%", minWidth: "8em" }}>
                 <DatePicker
-                  selected={this.state.endTime}
+                  selected={this.state.notifyTime}
                   onChange={time => {
                     this.setState({
-                      endTime: time
+                      notifyTime: time
                     });
                   }}
                   showTimeSelect
@@ -428,15 +487,14 @@ class CreateTimeBlock extends Component {
                   timeIntervals={15}
                   className="form-control text-center"
                   dateFormat="LT"
-                  disabled={this.state.isCanceled || this.state.isAllDay}
                 />
               </div>
             </div>
             {!this.state.validation.dateRange && (
               <small className="text-red">Invalid start and end dates</small>
             )}
-          </div>
-          <div className="text-center">
+          </div> */}
+          <div className="text-right">
             {/* <button
                       className="btn-lg btn-danger"
                       onClick={() => {
@@ -451,15 +509,17 @@ class CreateTimeBlock extends Component {
                       Validate
                     </button> */}
             <button
-              className="btn-lg btn-muted"
+              className="btn btn-muted"
               onClick={() => this.props.history.push("/view")}
             >
               Cancel
             </button>
             &nbsp;&nbsp;
             <button
-              className="btn-lg btn-primary"
+              className="btn btn-primary"
               onClick={() => {
+                console.log(this.getFormData());
+                this.handleSubmission();
                 this.validateInputs();
                 if (this.allValid()) {
                   this.handleSubmission();
@@ -475,4 +535,4 @@ class CreateTimeBlock extends Component {
   }
 }
 
-export default withRouter(CreateTimeBlock);
+export default withRouter(SubmitStory);

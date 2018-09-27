@@ -30,21 +30,6 @@ namespace TYP.Web.Controllers.Api
             //List < Story > stories = new List<Story>();
 
             List<Story> allStories = storyService.GetAll();
-
-            //Story s1 = new Story
-            //{
-            //    Id = 1,
-            //    Description = "Hello world",
-            //    PosterName = "Master Hacker"
-            //};
-            //stories.Add(s1);
-            //Story s2 = new Story
-            //{
-            //    Id = 4,
-            //    Description = "Great day",
-            //    PosterName = "Joanna"
-            //};
-            //stories.Add(s2);
             items.Items = allStories;
 
             return Request.CreateResponse(HttpStatusCode.OK, items);
@@ -67,6 +52,16 @@ namespace TYP.Web.Controllers.Api
         [Route, HttpPost]
         public HttpResponseMessage PostStory(CreateStory request)
         {
+            if (request == null)
+            {
+                ModelState.AddModelError("", "No data supplied!");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+            }
+
             ItemResponse<Story> response = new ItemResponse<Story>();
             Story newStory = new Story
             {

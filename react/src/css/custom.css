@@ -3,3 +3,12 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+.autocomplete-dropdown-container {
+  padding: 0.4em;
+  border-bottom: 1px solid #c6c6c6;
+  border-right: 1px solid #c6c6c6;
+  border-left: 1px solid #c6c6c6;
+  border-bottom-left-radius: 0.2em;
+  border-bottom-right-radius: 0.2em;
+}

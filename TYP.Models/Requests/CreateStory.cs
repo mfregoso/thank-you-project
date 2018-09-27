@@ -9,15 +9,23 @@ namespace TYP.Models.Requests
 {
     public class CreateStory
     {
-        [Required]
+        [Required, MaxLength(3000)]
         public string Description { get; set; }
-        public DateTime? PublishDate { get; set; }
-        public DateTime? EventDate { get; set; }
         [Required]
+        public string PublishDate { get; set; }
+        [Required]
+        public string StoryDate { get; set; }
+        [Required, MaxLength(100)]
         public string PosterName { get; set; }
+        [Required, MaxLength(100)]
         public string ThankeeName { get; set; }
-        public string LocationName { get; set; }
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
+        [MaxLength(100)]
+        public string ThankeeEmail { get; set; }
+        [Required, MaxLength(100)]
+        public string Location { get; set; }
+        [Required, MaxLength(30)]
+        public string Latitude { get; set; }
+        [Required, MaxLength(30)]
+        public string Longitude { get; set; }
     }
 }
