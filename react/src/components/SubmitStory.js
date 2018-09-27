@@ -22,7 +22,7 @@ import DatePicker from "react-datepicker";
 import "../css/react-datepicker.css";
 import onInputChange from "../utilities/onInputChange";
 import validateEmail from "../utilities/validateEmail";
-import { CreateStory } from "../services/story.service";
+import { CreateStory, GetStoryById } from "../services/story.service";
 //import queryString from "querystring";
 
 class SubmitStory extends Component {
@@ -38,6 +38,7 @@ class SubmitStory extends Component {
     isGeocoding: false,
     description: "",
     thankeeEmail: "",
+    storyId: null,
     storyDate: moment().local(), // set moment("2018-08-16"),
     publishDate: moment().local(),
     notifyDate: moment().local(),
@@ -58,22 +59,30 @@ class SubmitStory extends Component {
     const now = moment().local();
     console.log(now.format("YYYY-MM-DD[T]HH:mm:ssZ"));
 
-    const setFormValues = () => {
-      this.setState({
-        storyDate: moment(this.state.timeBlock.storyDate.substr(0, 10)),
-        notifyDate: moment(this.state.timeBlock.notifyDate.substr(0, 10)),
-        notifyTime: moment(this.state.timeBlock.notifyTime, "HH:mm"),
-        thankeeName: this.state.timeBlock.thankeeName,
-        location: this.state.timeBlock.location || "",
-        description: this.state.timeBlock.description || "",
-        thankeeEmail: this.state.timeBlock.thankeeEmail || ""
-      });
+    const setFormValues = story => {
+      if (story.id) {
+        this.setState({
+          //notifyDate: moment(this.state.timeBlock.notifyDate.substr(0, 10)),
+          //notifyTime: moment(this.state.timeBlock.notifyTime, "HH:mm"),
+          storyDate: moment(story.storyDate.substr(0, 10)),
+          thankeeName: story.thankeeName,
+          posterName: story.posterName,
+          location: story.location || "",
+          description: story.description || "",
+          thankeeEmail: story.thankeeEmail || "",
+          publishDate: moment(story.publishDate.substr(0, 10)),
+          latitude: story.latitude,
+          longitude: story.longitude,
+          storyId: story.id
+        });
+      }
     };
 
     if (this.props.match.params.id) {
-      let idParam = parseInt(this.props.match.params.id);
-      if (Number.isInteger(idParam)) {
-        console.log(idParam);
+      let storyId = parseInt(this.props.match.params.id);
+      if (Number.isInteger(storyId)) {
+        console.log(storyId);
+        GetStoryById(storyId).then(resp => setFormValues(resp.data.item));
       }
     }
   } // END of DidMount

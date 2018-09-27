@@ -44,6 +44,40 @@ namespace TYP.Services.Services
             return stories;
         }
 
+        public Story GetById(int Id)
+        {
+            Story story = new Story();
+            using (SqlConnection sql = new SqlConnection(connectionString))
+            {
+                sql.Open();
+                using (SqlCommand cmd = sql.CreateCommand())
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandText = "Story_SelectById";
+                    cmd.Parameters.AddWithValue("@Id", Id);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        story.Id = (int)reader["Id"];
+                        story.PosterName = (string)reader["PosterName"];
+                        story.Description = (string)reader["Description"];
+                        story.ThankeeName = (string)reader["ThankeeName"];
+                        story.Location = (string)reader["Location"];
+                        story.Latitude = (double)reader["Latitude"];
+                        story.Longitude = (double)reader["Longitude"];
+                        story.StoryDate = (DateTime)reader["StoryDate"];
+                        story.PublishDate = (DateTime)reader["PublishDate"];
+                        object thankeeEmail = reader["ThankeeEmail"]; // catch possible DBNull.Value from SQL
+                        if (thankeeEmail != DBNull.Value)
+                        {
+                            story.ThankeeEmail = (string)thankeeEmail; 
+                        }
+                     };
+                }
+            }
+            return story;
+        }
+
         public int CreateStory(CreateStory story)
         {
             using (SqlConnection sql = new SqlConnection(connectionString))

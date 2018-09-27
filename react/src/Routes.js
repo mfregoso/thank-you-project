@@ -16,6 +16,11 @@ class Routes extends Component {
             path="/create"
             render={props => <SubmitStory {...props} />}
           />
+          <Route
+            exact
+            path="/edit/:id"
+            render={props => <SubmitStory {...props} />}
+          />
         </Switch>
       </div>
     );

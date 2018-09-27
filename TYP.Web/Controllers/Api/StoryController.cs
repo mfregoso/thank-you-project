@@ -14,10 +14,10 @@ namespace TYP.Web.Controllers.Api
 
 {
     [RoutePrefix("api/stories")]
-    public class PostController : ApiController
+    public class StoryController : ApiController
     {
         readonly IStoryService storyService;
-        public PostController(IStoryService storyService)
+        public StoryController(IStoryService storyService)
         {
             this.storyService = storyService;
         }
@@ -38,15 +38,8 @@ namespace TYP.Web.Controllers.Api
         [Route("{Id:int}"), HttpGet]
         public HttpResponseMessage GetById(int Id)
         {
-            ItemResponse<Story> item = new ItemResponse<Story> {
-                Item = new Story
-                {
-                    Id = Id,
-                    Description = "Hello world",
-                    PosterName = "Master Hacker"
-                }
-            };
-            return Request.CreateResponse(HttpStatusCode.OK, item);
+            Story story = storyService.GetById(Id);
+            return Request.CreateResponse(HttpStatusCode.OK, new ItemResponse<Story> { Item = story });
         }
 
         [Route, HttpPost]
@@ -61,15 +54,9 @@ namespace TYP.Web.Controllers.Api
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
             }
-
-            ItemResponse<Story> response = new ItemResponse<Story>();
-            Story newStory = new Story
-            {
-                Description = request.Description,
-                PosterName = request.PosterName
-            };
-            response.Item = newStory;
-            return Request.CreateResponse(HttpStatusCode.OK, response);
+            
+            int id = storyService.CreateStory(request);
+            return Request.CreateResponse(HttpStatusCode.Created, new ItemResponse<int> { Item = id } );
         }
 
         [Route("{Id:int}"), HttpPut]
@@ -82,33 +69,6 @@ namespace TYP.Web.Controllers.Api
         public HttpResponseMessage DeleteStory(int Id)
         {
             return Request.CreateResponse(HttpStatusCode.OK, "You just deleted ID: " + Id.ToString());
-        }
-
-        // GET: api/Post
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET: api/Post/5
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST: api/Post
-        public void Post([FromBody]string value)
-        {
-        }
-
-        // PUT: api/Post/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE: api/Post/5
-        public void Delete(int id)
-        {
-        }
+        }       
     }
 }

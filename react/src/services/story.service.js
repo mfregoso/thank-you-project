@@ -7,3 +7,10 @@ export function CreateStory(payload) {
     data: payload
   });
 }
+
+export function GetStoryById(id) {
+  return axios({
+    method: "get",
+    url: "/api/stories/" + id
+  });
+}
