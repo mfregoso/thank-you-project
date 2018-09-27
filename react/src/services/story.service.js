@@ -8,9 +8,24 @@ export function CreateStory(payload) {
   });
 }
 
+export function UpdateStory(id, payload) {
+  return axios({
+    method: "put",
+    url: "/api/stories/" + id,
+    data: payload
+  });
+}
+
 export function GetStoryById(id) {
   return axios({
     method: "get",
     url: "/api/stories/" + id
+  });
+}
+
+export function GetAllStories() {
+  return axios({
+    method: "get",
+    url: "/api/stories"
   });
 }

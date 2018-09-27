@@ -39,7 +39,14 @@ namespace TYP.Web.Controllers.Api
         public HttpResponseMessage GetById(int Id)
         {
             Story story = storyService.GetById(Id);
-            return Request.CreateResponse(HttpStatusCode.OK, new ItemResponse<Story> { Item = story });
+            if (story.Id.HasValue)
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, new ItemResponse<Story> { Item = story });                
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.OK, new ItemResponse<string> { Item = null });
+            }
         }
 
         [Route, HttpPost]
@@ -60,9 +67,20 @@ namespace TYP.Web.Controllers.Api
         }
 
         [Route("{Id:int}"), HttpPut]
-        public HttpResponseMessage UpdateStory(int Id)
+        public HttpResponseMessage UpdateStory(UpdateStory update, int Id)
         {
-            return Request.CreateResponse(HttpStatusCode.OK, "You updated ID: " + Id.ToString());
+            if (update == null)
+            {
+                ModelState.AddModelError("", "No data supplied!");
+            } else if (update.Id != Id)
+            {
+                ModelState.AddModelError("", "URL ID and Body ID do not match!");
+            } else if (!ModelState.IsValid)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+            }
+            storyService.UpdateStory(update);
+            return Request.CreateResponse(HttpStatusCode.OK, new SuccessResponse());
         }
 
         [Route("{Id:int}"), HttpDelete]

@@ -8,7 +8,7 @@ namespace TYP.Models.Domain
 {
     public class Story
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public string Description { get; set; }
         public DateTime PublishDate { get; set; }
         public DateTime StoryDate { get; set; }

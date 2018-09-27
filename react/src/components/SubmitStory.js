@@ -22,7 +22,11 @@ import DatePicker from "react-datepicker";
 import "../css/react-datepicker.css";
 import onInputChange from "../utilities/onInputChange";
 import validateEmail from "../utilities/validateEmail";
-import { CreateStory, GetStoryById } from "../services/story.service";
+import {
+  CreateStory,
+  GetStoryById,
+  UpdateStory
+} from "../services/story.service";
 //import queryString from "querystring";
 
 class SubmitStory extends Component {
@@ -39,6 +43,7 @@ class SubmitStory extends Component {
     description: "",
     thankeeEmail: "",
     storyId: null,
+    disableAutocomplete: false,
     storyDate: moment().local(), // set moment("2018-08-16"),
     publishDate: moment().local(),
     notifyDate: moment().local(),
@@ -60,7 +65,7 @@ class SubmitStory extends Component {
     console.log(now.format("YYYY-MM-DD[T]HH:mm:ssZ"));
 
     const setFormValues = story => {
-      if (story.id) {
+      if (story) {
         this.setState({
           //notifyDate: moment(this.state.timeBlock.notifyDate.substr(0, 10)),
           //notifyTime: moment(this.state.timeBlock.notifyTime, "HH:mm"),
@@ -73,19 +78,43 @@ class SubmitStory extends Component {
           publishDate: moment(story.publishDate.substr(0, 10)),
           latitude: story.latitude,
           longitude: story.longitude,
-          storyId: story.id
+          storyId: story.id,
+          inEditMode: true,
+          disableAutocomplete: true
         });
       }
     };
 
     if (this.props.match.params.id) {
-      let storyId = parseInt(this.props.match.params.id);
-      if (Number.isInteger(storyId)) {
-        console.log(storyId);
+      let checkId = /^\d+$/;
+      let tempId = this.props.match.params.id;
+      if (checkId.test(tempId)) {
+        let storyId = parseInt(tempId, 10);
         GetStoryById(storyId).then(resp => setFormValues(resp.data.item));
       }
     }
   } // END of DidMount
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.location.pathname.startsWith("/edit") &&
+      this.props.location.pathname === "/create"
+    ) {
+      this.setState({
+        storyDate: moment().local(),
+        thankeeName: "",
+        posterName: "",
+        location: "",
+        description: "",
+        thankeeEmail: "",
+        publishDate: moment().local(),
+        latitude: null,
+        longitude: null,
+        storyId: null,
+        inEditMode: false
+      });
+    }
+  }
 
   getFormData = () => {
     // to-do? notificate date + time + validation?
@@ -97,19 +126,18 @@ class SubmitStory extends Component {
       description: this.state.description,
       posterName: this.state.posterName,
       thankeeEmail: this.state.thankeeEmail,
-      storyDate: moment(this.state.storyDate).format("YYYY-MM-DD"),
+      storyDate: this.state.storyDate.format("YYYY-MM-DD"),
       publishDate: this.state.publishDate.format("YYYY-MM-DD")
-      //dateTimeZone: this.state.publishDate.format("YYYY-MM-DD[T]HH:mm:ssZ")
     };
     if (this.state.inEditMode) {
-      // insert ID+value into object
+      formData.id = this.state.storyId;
     }
     return formData;
   };
 
   handleMapsAutocomplete = location => {
     let nameOnly = location.substr(0, location.indexOf(","));
-    this.setState({ location: nameOnly });
+    this.setState({ location: nameOnly, disableAutocomplete: true });
     geocodeByAddress(location)
       .then(results => getLatLng(results[0]))
       .then(latLng => {
@@ -170,7 +198,10 @@ class SubmitStory extends Component {
 
   handleSubmission = () => {
     if (this.state.inEditMode) {
-      //edit mode
+      let data = this.getFormData();
+      UpdateStory(this.state.storyId, data).then(resp =>
+        console.log(resp.data)
+      );
     } else {
       let data = this.getFormData();
       CreateStory(data)
@@ -184,7 +215,8 @@ class SubmitStory extends Component {
       location: "",
       latitude: null,
       longitude: null,
-      isGeocoding: false
+      isGeocoding: false,
+      disableAutocomplete: false
     });
   };
 
@@ -338,12 +370,22 @@ class SubmitStory extends Component {
               }) => (
                 <div className="form-group">
                   <InputGroup>
-                    <Input
-                      maxLength={100}
-                      {...getInputProps({
-                        placeholder: "Search for a Location"
-                      })}
-                    />
+                    {this.state.disableAutocomplete ? (
+                      <Input
+                        maxLength={100}
+                        {...getInputProps({
+                          placeholder: "Search for a Location"
+                        })}
+                        disabled
+                      />
+                    ) : (
+                      <Input
+                        maxLength={100}
+                        {...getInputProps({
+                          placeholder: "Search for a Location"
+                        })}
+                      />
+                    )}
                     <InputGroupAddon addonType="append">
                       <Button color="danger" onClick={this.resetLocation}>
                         x

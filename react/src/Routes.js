@@ -11,11 +11,7 @@ class Routes extends Component {
         <NavBar />
         <Switch>
           <Route exact path="/" render={props => <LandingPage {...props} />} />
-          <Route
-            exact
-            path="/create"
-            render={props => <SubmitStory {...props} />}
-          />
+          <Route path="/create" render={props => <SubmitStory {...props} />} />
           <Route
             exact
             path="/edit/:id"

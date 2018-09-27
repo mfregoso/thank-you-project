@@ -7,10 +7,8 @@ using TYP.Models.Domain;
 
 namespace TYP.Models.Responses
 {
-    public class ItemResponse<T>
+    public class ItemResponse<T> : SuccessResponse
     {
-        public bool IsSuccessful = true;
-        public Guid TransactionId = Guid.NewGuid();
         public T Item { get; set; }
     }
 }

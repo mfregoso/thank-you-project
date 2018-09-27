@@ -13,5 +13,6 @@ namespace TYP.Services.Interfaces
         List<Story> GetAll();
         int CreateStory(CreateStory story);
         Story GetById(int Id);
+        void UpdateStory(UpdateStory story);
     }
 }
