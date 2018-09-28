@@ -1,10 +1,13 @@
 import { createStore } from "redux";
 
-function reducer(state, action) {
+function storeReducer(state, action) {
   if (!state) {
     return {
       userLatitude: null,
-      userLongitude: null
+      userLongitude: null,
+      mapLatitude: null,
+      mapLongitude: null,
+      mapZoom: null
     };
   }
 
@@ -21,9 +24,30 @@ function reducer(state, action) {
       userLongitude: action.setLongitude
     };
   }
-}
+
+  if (action.type === "SET_MAP_LATITUDE") {
+    return {
+      ...state,
+      mapLatitude: action.setLatitude
+    };
+  }
+
+  if (action.type === "SET_MAP_LONGITUDE") {
+    return {
+      ...state,
+      mapLongitude: action.setLongitude
+    };
+  }
+
+  if (action.type === "SET_MAP_ZOOM") {
+    return {
+      ...state,
+      mapZoom: action.setZoom
+    };
+  }
+} // end of storeReducer
 
 export default createStore(
-  reducer,
+  storeReducer,
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
