@@ -26,13 +26,12 @@ namespace TYP.Web.Controllers.Api
         [Route, HttpGet]
         public HttpResponseMessage GetAll()
         {
-            ItemsResponse<Story> items = new ItemsResponse<Story>();
-            //List < Story > stories = new List<Story>();
+            ItemsResponse<Story> stories = new ItemsResponse<Story>();         
 
             List<Story> allStories = storyService.GetAll();
-            items.Items = allStories;
+            stories.Items = allStories;
 
-            return Request.CreateResponse(HttpStatusCode.OK, items);
+            return Request.CreateResponse(HttpStatusCode.OK, stories);
         }
 
         [Route("{Id:int}"), HttpGet]
@@ -86,7 +85,8 @@ namespace TYP.Web.Controllers.Api
         [Route("{Id:int}"), HttpDelete]
         public HttpResponseMessage DeleteStory(int Id)
         {
-            return Request.CreateResponse(HttpStatusCode.OK, "You just deleted ID: " + Id.ToString());
+            storyService.DeleteStory(Id);
+            return Request.CreateResponse(HttpStatusCode.OK, new SuccessResponse());
         }       
     }
 }

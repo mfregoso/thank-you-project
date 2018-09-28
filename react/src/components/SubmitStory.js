@@ -164,7 +164,7 @@ class SubmitStory extends Component {
           toggle={() => this.setState({ menuOpen: !this.state.menuOpen })}
         >
           <DropdownToggle tag="span">
-            <span className="icon-btn text-grey pointer">
+            <span className="icon-btn text-dark pointer">
               <i className="zmdi zmdi-more-vert zmdi-hc-lg" />
             </span>
           </DropdownToggle>
@@ -283,8 +283,7 @@ class SubmitStory extends Component {
   render() {
     return (
       <div className="col-xl-5 col-lg-6 col-md-7 col-sm-10 col-xs-12 mx-auto">
-        <div className="jr-entry-header">{/*adds padding to thankeeName*/}</div>
-        <div className="jr-card">
+        <div>
           <div
             className=""
             style={{

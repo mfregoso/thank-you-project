@@ -141,5 +141,20 @@ namespace TYP.Services.Services
                 }
             }
         }
+
+        public void DeleteStory(int Id)
+        {
+            using (SqlConnection sql = new SqlConnection(connectionString))
+            {
+                sql.Open();
+                using (SqlCommand cmd = sql.CreateCommand())
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandText = "Story_Delete";
+                    cmd.Parameters.AddWithValue("@Id", Id);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }
