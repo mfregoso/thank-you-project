@@ -3,6 +3,7 @@ import { Switch, Route } from "react-router-dom"; // use Redirect?
 import NavBar from "./components/TopNavBar";
 import LandingPage from "./components/LandingPage";
 import SubmitStory from "./components/SubmitStory";
+import ViewStories from "./components/ViewStories";
 
 class Routes extends Component {
   render() {
@@ -17,6 +18,7 @@ class Routes extends Component {
             path="/edit/:id"
             render={props => <SubmitStory {...props} />}
           />
+          <Route path="/view" render={props => <ViewStories {...props} />} />
         </Switch>
       </div>
     );
