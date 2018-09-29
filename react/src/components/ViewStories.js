@@ -106,6 +106,13 @@ class ViewStories extends Component {
     const mapOptions = {
       scrollwheel: true,
       minZoom: 8
+      // hide: [
+      //   {
+      //     featureType: "all",
+      //     elementType: "labels",
+      //     stylers: [{ visibility: "off" }]
+      //   }
+      // ]
     };
     return (
       <div className="container-fluid view-spacer">

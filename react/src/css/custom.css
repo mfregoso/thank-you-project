@@ -44,3 +44,7 @@ body {
   border-radius: 50%;
   background-color: rgb(99, 99, 99);
 }
+
+.marker-spacer {
+  margin-top: 0.5em;
+}
