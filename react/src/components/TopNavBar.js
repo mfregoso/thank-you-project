@@ -31,7 +31,7 @@ class TopNavBar extends Component {
             href="javascript:(0)"
             onClick={() => this.props.history.push("/")}
           >
-            TYProject
+            by mfregoso
           </NavbarBrand>
           <NavbarToggler onClick={this.toggleMenu} />
           <Collapse isOpen={this.state.isOpen} navbar>
@@ -40,19 +40,19 @@ class TopNavBar extends Component {
                 <NavLink
                   href="javascript:(0)"
                   className="pointer"
-                  active={location.pathname === "/view"}
-                  onClick={() => this.props.history.push("/view")}
+                  active={location.pathname === "/find"}
+                  onClick={() => this.props.history.push("/find")}
                 >
-                  View Stories
+                  Find Stories
                 </NavLink>
               </NavItem>
               <NavItem>
                 <NavLink
                   href="javascript:(0)"
-                  active={location.pathname === "/create"}
-                  onClick={() => this.props.history.push("/create")}
+                  active={location.pathname === "/share"}
+                  onClick={() => this.props.history.push("/share")}
                 >
-                  Post a Story
+                  Share a Story
                 </NavLink>
               </NavItem>
 

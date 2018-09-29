@@ -24,19 +24,23 @@ class LandingPage extends Component {
         className="col-xl-5 col-lg-6 col-md-7 col-sm-10 col-xs-12 mx-auto text-center"
         style={{ paddingBottom: "2em" }}
       >
-        <img src={logo} style={{ maxWidth: "60%", paddingBottom: "2em" }} />
+        <img
+          src={logo}
+          alt="Thank You Project logo"
+          style={{ maxWidth: "60%", paddingBottom: "2em" }}
+        />
         <h1 className="landing-page-spacer">Thank You Project</h1>
         <button
           className="btn btn-lg btn-block btn-success landing-btn-spacer"
-          onClick={() => this.props.history.push("/create")}
+          onClick={() => this.props.history.push("/share")}
         >
           Share Your Story
         </button>
         <button
           className="btn btn-lg btn-block btn-secondary pointer"
-          onClick={() => this.props.history.push("/view")}
+          onClick={() => this.props.history.push("/find")}
         >
-          Find Stories Near You
+          Find A Story Near You
         </button>
       </div>
     );

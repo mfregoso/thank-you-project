@@ -62,9 +62,8 @@ class SubmitStory extends Component {
   };
 
   componentDidMount() {
-    // get all activities
-    const now = moment().local();
-    console.log(now.format("YYYY-MM-DD[T]HH:mm:ssZ"));
+    //const now = moment().local();
+    //console.log(now.format("YYYY-MM-DD[T]HH:mm:ssZ"));
 
     const setFormValues = story => {
       if (story) {
@@ -100,7 +99,7 @@ class SubmitStory extends Component {
   componentDidUpdate(prevProps) {
     if (
       prevProps.location.pathname.startsWith("/edit") &&
-      this.props.location.pathname === "/create"
+      this.props.location.pathname === "/share"
     ) {
       this.setState({
         storyDate: moment().local(),
@@ -169,7 +168,7 @@ class SubmitStory extends Component {
     } else {
       let data = this.getFormData();
       CreateStory(data)
-        .then(resp => this.props.history.push("/view"))
+        .then(resp => this.props.history.push("/find"))
         .catch(err => console.log(err));
     }
   };
@@ -194,7 +193,7 @@ class SubmitStory extends Component {
     this.setState({ deleteWarning: false });
     //alert("confirmed delete for " + this.state.storyId);
     if (this.state.storyId) {
-      DeleteStory(this.state.storyId).then(this.props.history.push("/view"));
+      DeleteStory(this.state.storyId).then(this.props.history.push("/find"));
     }
   };
 
@@ -267,7 +266,7 @@ class SubmitStory extends Component {
               }}
             >
               {(this.state.inEditMode && "Update Your Story") ||
-                "Submit A Thank You Story"}
+                "Share Your Story"}
             </h1>
           </div>
           {this.state.inEditMode && <br />}
@@ -528,7 +527,7 @@ class SubmitStory extends Component {
             )}
             <button
               className="btn btn-muted"
-              onClick={() => this.props.history.push("/view")}
+              onClick={() => this.props.history.push("/find")}
             >
               Cancel
             </button>

@@ -12,13 +12,13 @@ class Routes extends Component {
         <NavBar />
         <Switch>
           <Route exact path="/" render={props => <LandingPage {...props} />} />
-          <Route path="/create" render={props => <SubmitStory {...props} />} />
+          <Route path="/share" render={props => <SubmitStory {...props} />} />
           <Route
             exact
             path="/edit/:id"
             render={props => <SubmitStory {...props} />}
           />
-          <Route path="/view" render={props => <ViewStories {...props} />} />
+          <Route path="/find" render={props => <ViewStories {...props} />} />
         </Switch>
       </div>
     );
