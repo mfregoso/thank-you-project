@@ -25,9 +25,10 @@ import validateEmail from "../utilities/validateEmail";
 import {
   CreateStory,
   GetStoryById,
-  UpdateStory
+  UpdateStory,
+  DeleteStory
 } from "../services/story.service";
-//import queryString from "querystring";
+import SweetAlert from "react-bootstrap-sweetalert";
 
 class SubmitStory extends Component {
   state = {
@@ -56,7 +57,8 @@ class SubmitStory extends Component {
       dateRange: true,
       posterName: true,
       location: true
-    }
+    },
+    deleteWarning: false
   };
 
   componentDidMount() {
@@ -155,44 +157,6 @@ class SubmitStory extends Component {
 
   updateInputValue = onInputChange.bind(this);
 
-  insertEditMenuButton = () => {
-    return (
-      <div className="pull-right text-right">
-        <Dropdown
-          isOpen={this.state.menuOpen}
-          direction={"left"}
-          toggle={() => this.setState({ menuOpen: !this.state.menuOpen })}
-        >
-          <DropdownToggle tag="span">
-            <span className="icon-btn text-dark pointer">
-              <i className="zmdi zmdi-more-vert zmdi-hc-lg" />
-            </span>
-          </DropdownToggle>
-          <DropdownMenu className="text-center">
-            <DropdownItem
-              onClick={() => {
-                this.setState({ isCanceled: !this.state.isCanceled });
-              }}
-              //  // remove ability to unmark as canceled?
-            >
-              {(this.state.isCanceled && "Unmark as ") || "Mark as "}
-              Canceled
-            </DropdownItem>
-            <DropdownItem divider />
-            <DropdownItem
-              onClick={() => {
-                this.setState({ deleteWarning: true });
-              }}
-              className="text-danger"
-            >
-              Delete This Event
-            </DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-      </div>
-    );
-  };
-
   remainingCharacters = () =>
     `You have ${3000 - this.state.description.length} remaining characters`;
 
@@ -205,7 +169,7 @@ class SubmitStory extends Component {
     } else {
       let data = this.getFormData();
       CreateStory(data)
-        .then(resp => console.log(resp))
+        .then(resp => this.props.history.push("/view"))
         .catch(err => console.log(err));
     }
   };
@@ -220,23 +184,18 @@ class SubmitStory extends Component {
     });
   };
 
-  confirmedDeleteEvent = () => {
-    //alert("confirmed delete for " + this.state.timeBlock.id);
-    // delete, remove warning, then forward user
-  };
-
   cancelSweetAlert = () => {
     this.setState({
       deleteWarning: false
     });
   };
 
-  populateActivityBox = activity => {
-    return (
-      <option key={activity.id} value={activity.id}>
-        {activity.name}
-      </option>
-    );
+  confirmedDeleteEvent = () => {
+    this.setState({ deleteWarning: false });
+    //alert("confirmed delete for " + this.state.storyId);
+    if (this.state.storyId) {
+      DeleteStory(this.state.storyId).then(this.props.history.push("/view"));
+    }
   };
 
   validateInputs = () => {
@@ -282,7 +241,10 @@ class SubmitStory extends Component {
 
   render() {
     return (
-      <div className="col-xl-5 col-lg-6 col-md-7 col-sm-10 col-xs-12 mx-auto">
+      <div
+        className="col-xl-5 col-lg-6 col-md-7 col-sm-10 col-xs-12 mx-auto"
+        style={{ paddingBottom: "2em" }}
+      >
         <div>
           <div
             className=""
@@ -294,9 +256,7 @@ class SubmitStory extends Component {
               textAlign: "right",
               height: "0.1em"
             }}
-          >
-            {this.state.inEditMode && this.insertEditMenuButton()}
-          </div>
+          />
           <div className="mx-auto">
             <h1
               className="thankeeName text-center"
@@ -558,6 +518,14 @@ class SubmitStory extends Component {
                     >
                       Validate
                     </button> */}
+            {this.state.inEditMode && (
+              <button
+                className="btn btn-danger float-left"
+                onClick={() => this.setState({ deleteWarning: true })}
+              >
+                Delete
+              </button>
+            )}
             <button
               className="btn btn-muted"
               onClick={() => this.props.history.push("/view")}
@@ -580,6 +548,20 @@ class SubmitStory extends Component {
             </button>
           </div>
         </div>
+        <SweetAlert
+          show={this.state.deleteWarning}
+          warning
+          showCancel
+          confirmBtnText={"Yes, Delete"}
+          confirmBtnBsStyle="danger"
+          cancelBtnBsStyle="default"
+          cancelBtnText={"No, Keep It"}
+          title={`Delete your story about ${this.state.thankeeName}?`}
+          onConfirm={this.confirmedDeleteEvent}
+          onCancel={this.cancelSweetAlert}
+        >
+          <small>This cannot be undone!</small>
+        </SweetAlert>
       </div>
     );
   }

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { GetAllStories } from "../services/story.service";
+import GetUserLocation from "../services/googleGeolocate.service";
 import GoogleMapReact from "google-map-react";
 import PlacesAutocomplete, {
   geocodeByAddress,
@@ -34,6 +35,11 @@ class ViewStories extends Component {
     }
     if (!this.props.userLongitude && !this.props.userLatitude) {
       //this.props.history.push("/");
+      // GetUserLocation().then(resp => {
+      //   let { lat, lng } = resp.data.location;
+      //   this.props.sendLatitude(lat);
+      //   this.props.sendLongitude(lng);
+      // });
     }
   }
 
@@ -199,7 +205,11 @@ const mapDispatchToProps = dispatch => {
       dispatch({ type: "SET_MAP_LATITUDE", setLatitude }),
     sendMapLongitude: setLongitude =>
       dispatch({ type: "SET_MAP_LONGITUDE", setLongitude }),
-    sendMapZoom: setZoom => dispatch({ type: "SET_MAP_ZOOM", setZoom })
+    sendMapZoom: setZoom => dispatch({ type: "SET_MAP_ZOOM", setZoom }),
+    sendLatitude: setLatitude =>
+      dispatch({ type: "SET_USER_LATITUDE", setLatitude }),
+    sendLongitude: setLongitude =>
+      dispatch({ type: "SET_USER_LONGITUDE", setLongitude })
   };
 };
 

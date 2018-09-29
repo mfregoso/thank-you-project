@@ -12,3 +12,11 @@ body {
   border-bottom-left-radius: 0.2em;
   border-bottom-right-radius: 0.2em;
 }
+
+.landing-page-spacer {
+  margin-bottom: 1em;
+}
+
+.landing-btn-spacer {
+  margin-bottom: 1.6em;
+}

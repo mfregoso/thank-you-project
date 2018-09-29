@@ -25,7 +25,7 @@ class TopNavBar extends Component {
           color="dark"
           dark={true}
           expand="md"
-          style={{ marginBottom: "4em" }}
+          style={{ marginBottom: "3em" }}
         >
           <NavbarBrand
             href="javascript:(0)"
