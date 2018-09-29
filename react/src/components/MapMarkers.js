@@ -53,8 +53,9 @@ class MapMarkers extends Component {
             </span>
           </PopoverHeader>
           <PopoverBody>
-            <div className="font-weight-bold">Dear {copy.thankeeName},</div>
+            <div className="font-weight-bold">{copy.thankeeName},</div>
             <div
+              className="marker-desc"
               style={{
                 whiteSpace: "pre-wrap",
                 width: "100%"
