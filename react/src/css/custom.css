@@ -20,3 +20,10 @@ body {
 .landing-btn-spacer {
   margin-bottom: 1.6em;
 }
+
+.results-container {
+  max-height: 80vh;
+  overflow-y: auto;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+  background-color: rgb(214, 214, 214);
+}

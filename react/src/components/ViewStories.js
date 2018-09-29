@@ -1,19 +1,17 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { GetAllStories } from "../services/story.service";
-import GetUserLocation from "../services/googleGeolocate.service";
+//import GetUserLocation from "../services/googleGeolocate.service";
 import GoogleMapReact from "google-map-react";
 import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng
 } from "react-places-autocomplete";
 import { Input, InputGroup, InputGroupAddon, Button } from "reactstrap";
-
-const AnyReactComponent = ({ text }) => (
-  <div style={{ borderRadius: "20%", width: "4em", backgroundColor: "red" }}>
-    {text}
-  </div>
-);
+import MapMarkers from "./MapMarkers";
+import moment from "moment";
+import ResultRow from "./ResultRow";
+import "../css/custom.css";
 
 class ViewStories extends Component {
   state = {
@@ -26,7 +24,10 @@ class ViewStories extends Component {
   };
 
   componentDidMount() {
-    GetAllStories().then(resp => this.setState({ stories: resp.data.items }));
+    GetAllStories().then(resp => {
+      let stories = this.reformatStories(resp.data.items);
+      this.setState({ stories });
+    });
     if (this.props.userLongitude && this.props.userLatitude) {
       this.setState({
         latitude: this.props.userLatitude,
@@ -59,10 +60,23 @@ class ViewStories extends Component {
         this.setState({
           latitude: latLng.lat,
           longitude: latLng.lng,
-          zoomLevel: 13
+          zoomLevel: 14
         });
       })
       .catch(error => console.error("Error", error));
+  };
+
+  reformatStories = stories => {
+    let reformatted = stories.map(story => {
+      let dayOfStory = moment(story.storyDate, "YYYY-MM-DD").format(
+        "dddd, MMM D, YYYY"
+      );
+      return {
+        ...story,
+        dayOfStory
+      };
+    });
+    return reformatted;
   };
 
   resetLocation = () => this.setState({ location: "" });
@@ -94,105 +108,109 @@ class ViewStories extends Component {
       minZoom: 8
     };
     return (
-      <div>
-        <div className="container-fluid">
-          <div className="float-right col-xl-3 col-lg-3 col-md-3 col-xs-12">
-            <div className="form-group">
-              <PlacesAutocomplete
-                value={this.state.location}
-                onChange={this.autoCompleteChange}
-                onSelect={this.handleMapsAutocomplete}
-              >
-                {({
-                  getInputProps,
-                  suggestions,
-                  getSuggestionItemProps,
-                  loading
-                }) => (
-                  <div className="form-group">
-                    <InputGroup>
-                      {" "}
-                      <Input
-                        maxLength={100}
-                        {...getInputProps({
-                          placeholder: "Search Stories by Location"
-                        })}
-                      />
-                      <InputGroupAddon addonType="append">
-                        <Button color="danger" onClick={this.resetLocation}>
-                          x
-                        </Button>
-                      </InputGroupAddon>
-                    </InputGroup>
-                    {suggestions.length > 0 && (
-                      <div className="autocomplete-dropdown-container">
-                        {loading && <div>Loading...</div>}
-                        {suggestions.map(suggestion => {
-                          const className = suggestion.active
-                            ? "suggestion-item--active"
-                            : "suggestion-item";
-                          const style = suggestion.active
-                            ? {
-                                backgroundColor: "#e8e8e8",
-                                cursor: "pointer",
-                                margin: "0.3em"
-                              }
-                            : {
-                                backgroundColor: "#ffffff",
-                                cursor: "pointer",
-                                margin: "0.3em"
-                              };
-                          return (
-                            <div
-                              {...getSuggestionItemProps(suggestion, {
-                                className,
-                                style
-                              })}
-                            >
-                              <span>{suggestion.description}</span>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-                )}
-              </PlacesAutocomplete>
-            </div>
-          </div>
-          <div
-            className="float-left col-xl-9 col-lg-9 col-md-9 col-xs-12"
-            style={{ height: "90vh" }}
-          >
-            <GoogleMapReact
-              bootstrapURLKeys={{
-                key: "AIzaSyBcBHH4tjzT73Zms3uDoCun9GaNy-Ue5QQ"
-              }}
-              defaultCenter={{
-                lat: this.props.userLatitude || 33.9860021,
-                lng: this.props.userLongitude || -118.3966412
-              }}
-              center={{
-                lat: this.state.latitude || 33.9860021,
-                lng: this.state.longitude || -118.3966412
-              }}
-              defaultZoom={12}
-              zoom={this.state.zoomLevel || 12}
-              options={mapOptions}
-              //onChange={this.handleMapChanges} // callback with all kinds of useful information
+      <div className="container-fluid view-spacer">
+        <div className="float-right col-xl-3 col-lg-3 col-md-12 col-xs-12">
+          <div className="form-group">
+            <PlacesAutocomplete
+              value={this.state.location}
+              onChange={this.autoCompleteChange}
+              onSelect={this.handleMapsAutocomplete}
             >
-              {(this.state.filteredStories || this.state.stories).map(story => {
-                return (
-                  <AnyReactComponent
-                    key={story.id}
-                    lat={story.latitude}
-                    lng={story.longitude}
-                    text={story.thankeeName}
-                  />
-                );
-              })}
-            </GoogleMapReact>
+              {({
+                getInputProps,
+                suggestions,
+                getSuggestionItemProps,
+                loading
+              }) => (
+                <div className="form-group">
+                  <InputGroup>
+                    {" "}
+                    <Input
+                      maxLength={100}
+                      {...getInputProps({
+                        placeholder: "Search Stories by Location"
+                      })}
+                    />
+                    <InputGroupAddon addonType="append">
+                      <Button color="danger" onClick={this.resetLocation}>
+                        x
+                      </Button>
+                    </InputGroupAddon>
+                  </InputGroup>
+                  {suggestions.length > 0 && (
+                    <div className="autocomplete-dropdown-container">
+                      {loading && <div>Loading...</div>}
+                      {suggestions.map(suggestion => {
+                        const className = suggestion.active
+                          ? "suggestion-item--active"
+                          : "suggestion-item";
+                        const style = suggestion.active
+                          ? {
+                              backgroundColor: "#e8e8e8",
+                              cursor: "pointer",
+                              margin: "0.3em"
+                            }
+                          : {
+                              backgroundColor: "#ffffff",
+                              cursor: "pointer",
+                              margin: "0.3em"
+                            };
+                        return (
+                          <div
+                            {...getSuggestionItemProps(suggestion, {
+                              className,
+                              style
+                            })}
+                          >
+                            <span>{suggestion.description}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
+            </PlacesAutocomplete>
           </div>
+          <div className="results-container">
+            <table className="table table-light table-bordered table-striped">
+              <tbody>{this.state.stories.map(story => ResultRow(story))}</tbody>
+            </table>
+          </div>
+        </div>
+        <div
+          className="float-left col-xl-9 col-lg-9 col-md-12 col-xs-12"
+          style={{ height: "90vh" }}
+        >
+          <GoogleMapReact
+            bootstrapURLKeys={{
+              key: "AIzaSyBcBHH4tjzT73Zms3uDoCun9GaNy-Ue5QQ"
+            }}
+            defaultCenter={{
+              lat: this.props.userLatitude || 33.9860021,
+              lng: this.props.userLongitude || -118.3966412
+            }}
+            center={{
+              lat: this.state.latitude || 33.9860021,
+              lng: this.state.longitude || -118.3966412
+            }}
+            defaultZoom={12}
+            zoom={this.state.zoomLevel || 12}
+            options={mapOptions}
+            //onChange={this.handleMapChanges} // callback with all kinds of useful information
+          >
+            {(this.state.filteredStories || this.state.stories).map(story => {
+              return (
+                <MapMarkers
+                  key={story.id}
+                  id={story.id}
+                  lat={story.latitude}
+                  lng={story.longitude}
+                  story={story}
+                />
+              );
+            })}
+          </GoogleMapReact>
         </div>
       </div>
     );

@@ -1,9 +1,5 @@
 import React, { Component } from "react";
 import {
-  DropdownToggle,
-  Dropdown,
-  DropdownMenu,
-  DropdownItem,
   FormGroup,
   Label,
   Input,
@@ -57,8 +53,7 @@ class SubmitStory extends Component {
       dateRange: true,
       posterName: true,
       location: true
-    },
-    deleteWarning: false
+    }
   };
 
   componentDidMount() {
@@ -235,7 +230,6 @@ class SubmitStory extends Component {
     } else {
       return false;
     }
-    this.setState({ validation });
   };
 
   render() {
@@ -244,229 +238,228 @@ class SubmitStory extends Component {
         className="col-xl-5 col-lg-6 col-md-7 col-sm-10 col-xs-12 mx-auto"
         style={{ paddingBottom: "2em" }}
       >
-        <div>
-          <div
-            className=""
+        <div
+          className=""
+          style={{
+            position: "relative",
+            top: "-1.2em",
+            right: "-1.5em",
+            float: "right",
+            textAlign: "right",
+            height: "0.1em"
+          }}
+        />
+        <div className="mx-auto">
+          <h1
+            className="thankeeName text-center"
             style={{
               position: "relative",
-              top: "-1.2em",
-              right: "-1.5em",
-              float: "right",
-              textAlign: "right",
-              height: "0.1em"
+              top: "-0.4em",
+              marginBottom: "0.5em"
             }}
+          >
+            {(this.state.inEditMode && "Update Your Story") ||
+              "Share Your Story"}
+          </h1>
+        </div>
+        {this.state.inEditMode && <br />}
+        <FormGroup>
+          <Label>Person/Organization You Would Like To Thank</Label>
+          <Input
+            type="text"
+            name="thankeeName"
+            maxLength="100"
+            value={this.state.thankeeName}
+            onBlur={this.validateInputs}
+            onChange={e => {
+              this.setState({ [e.target.name]: e.target.value }, () => {
+                if (!this.state.validation.thankeeName) {
+                  this.validateInputs();
+                }
+              });
+            }}
+            //valid={this.state.validation.thankeeName}
+            invalid={!this.state.validation.thankeeName}
+            required
           />
-          <div className="mx-auto">
-            <h1
-              className="thankeeName text-center"
-              style={{
-                position: "relative",
-                top: "-0.4em",
-                marginBottom: "0.5em"
-              }}
-            >
-              {(this.state.inEditMode && "Update Your Story") ||
-                "Share Your Story"}
-            </h1>
-          </div>
-          {this.state.inEditMode && <br />}
-          <FormGroup>
-            <Label>Person/Organization You Would Like To Thank</Label>
-            <Input
-              type="text"
-              name="thankeeName"
-              maxLength="100"
-              value={this.state.thankeeName}
-              onBlur={this.validateInputs}
-              onChange={e => {
-                this.setState({ [e.target.name]: e.target.value }, () => {
-                  if (!this.state.validation.thankeeName) {
-                    this.validateInputs();
-                  }
-                });
-              }}
-              //valid={this.state.validation.thankeeName}
-              invalid={!this.state.validation.thankeeName}
-              required
-            />
-            <FormFeedback valid />
-            <FormFeedback>This field is required</FormFeedback>
-          </FormGroup>
-          <div className="form-group" style={{ minWidth: "22em" }}>
-            <label>&nbsp;Date Of This Story</label>
-            <div className="form-row">
-              <div className="col" style={{ maxWidth: "28%", minWidth: "9em" }}>
-                <DatePicker
-                  selected={this.state.storyDate}
-                  onChange={date =>
-                    this.setState({
-                      storyDate: date
-                    })
-                  }
-                  className="form-control text-center"
-                  dateFormat="MMM D[,] YYYY"
-                  maxDate={moment().local()}
-                  showMonthDropdown
-                  showYearDropdown
-                  dropdownMode="select"
-                />
-              </div>
+          <FormFeedback valid />
+          <FormFeedback>This field is required</FormFeedback>
+        </FormGroup>
+        <div className="form-group" style={{ minWidth: "22em" }}>
+          <label>&nbsp;Date Of This Story</label>
+          <div className="form-row">
+            <div className="col" style={{ maxWidth: "28%", minWidth: "9em" }}>
+              <DatePicker
+                selected={this.state.storyDate}
+                onChange={date =>
+                  this.setState({
+                    storyDate: date
+                  })
+                }
+                className="form-control text-center"
+                dateFormat="MMM D[,] YYYY"
+                maxDate={moment().local()}
+                showMonthDropdown
+                showYearDropdown
+                dropdownMode="select"
+              />
             </div>
           </div>
-          <div className="form-group">
-            <label>&nbsp;Location Of This Story</label>
-            <PlacesAutocomplete
-              value={this.state.location}
-              onChange={this.autoCompleteChange}
-              onSelect={this.handleMapsAutocomplete}
-            >
-              {({
-                getInputProps,
-                suggestions,
-                getSuggestionItemProps,
-                loading
-              }) => (
-                <div className="form-group">
-                  <InputGroup>
-                    {this.state.disableAutocomplete ? (
-                      <Input
-                        maxLength={100}
-                        {...getInputProps({
-                          placeholder: "Search for a Location"
-                        })}
-                        disabled
-                      />
-                    ) : (
-                      <Input
-                        maxLength={100}
-                        {...getInputProps({
-                          placeholder: "Search for a Location"
-                        })}
-                      />
-                    )}
-                    <InputGroupAddon addonType="append">
-                      <Button color="danger" onClick={this.resetLocation}>
-                        x
-                      </Button>
-                    </InputGroupAddon>
-                  </InputGroup>
-                  {suggestions.length > 0 && (
-                    <div className="autocomplete-dropdown-container">
-                      {loading && <div>Loading...</div>}
-                      {suggestions.map(suggestion => {
-                        const className = suggestion.active
-                          ? "suggestion-item--active"
-                          : "suggestion-item";
-                        const style = suggestion.active
-                          ? {
-                              backgroundColor: "#e8e8e8",
-                              cursor: "pointer",
-                              margin: "0.3em"
-                            }
-                          : {
-                              backgroundColor: "#ffffff",
-                              cursor: "pointer",
-                              margin: "0.3em"
-                            };
-                        return (
-                          <div
-                            {...getSuggestionItemProps(suggestion, {
-                              className,
-                              style
-                            })}
-                          >
-                            <span>{suggestion.description}</span>
-                          </div>
-                        );
+        </div>
+        <div className="form-group">
+          <label>&nbsp;Location Of This Story</label>
+          <PlacesAutocomplete
+            value={this.state.location}
+            onChange={this.autoCompleteChange}
+            onSelect={this.handleMapsAutocomplete}
+          >
+            {({
+              getInputProps,
+              suggestions,
+              getSuggestionItemProps,
+              loading
+            }) => (
+              <div className="form-group">
+                <InputGroup>
+                  {this.state.disableAutocomplete ? (
+                    <Input
+                      maxLength={100}
+                      {...getInputProps({
+                        placeholder: "Search for a Location"
                       })}
-                    </div>
+                      disabled
+                    />
+                  ) : (
+                    <Input
+                      maxLength={100}
+                      {...getInputProps({
+                        placeholder: "Search for a Location"
+                      })}
+                    />
                   )}
-                </div>
-              )}
-            </PlacesAutocomplete>
-          </div>
-          <div className="form-group">
-            <label>&nbsp;Your Thank You Story</label>
-            <textarea
-              className="form-control"
-              name="description"
-              maxLength="3000"
-              value={this.state.description}
-              onChange={this.updateInputValue}
-              rows="10"
-            />
-            {this.state.description.length > 2500 && (
-              <React.Fragment>
-                <small>
-                  &nbsp;
-                  {this.remainingCharacters()}
-                </small>
-              </React.Fragment>
-            )}
-          </div>
-          <FormGroup>
-            <Label>Sincerely,</Label>
-            <Input
-              type="text"
-              name="posterName"
-              maxLength="100"
-              placeholder="Your Name Here"
-              value={this.state.posterName}
-              onBlur={this.validateInputs}
-              onChange={e => {
-                this.setState({ [e.target.name]: e.target.value }, () => {
-                  if (!this.state.validation.thankeeName) {
-                    this.validateInputs();
-                  }
-                });
-              }}
-              //valid={this.state.validation.thankeeName}
-              invalid={!this.state.validation.posterName}
-              required
-            />
-            <FormFeedback valid />
-            <FormFeedback>This field is required</FormFeedback>
-          </FormGroup>
-          <div className="form-group" style={{ minWidth: "22em" }}>
-            <label>&nbsp;Publication Date</label>
-            <div className="form-row">
-              <div className="col" style={{ maxWidth: "28%", minWidth: "9em" }}>
-                <DatePicker
-                  selected={this.state.publishDate}
-                  onChange={date =>
-                    this.setState({
-                      publishDate: date
-                    })
-                  }
-                  className="form-control text-center"
-                  dateFormat="MMM D[,] YYYY"
-                  minDate={moment().local()}
-                  maxDate={moment().add(1, "years")}
-                />
+                  <InputGroupAddon addonType="append">
+                    <Button color="danger" onClick={this.resetLocation}>
+                      x
+                    </Button>
+                  </InputGroupAddon>
+                </InputGroup>
+                {suggestions.length > 0 && (
+                  <div className="autocomplete-dropdown-container">
+                    {loading && <div>Loading...</div>}
+                    {suggestions.map(suggestion => {
+                      const className = suggestion.active
+                        ? "suggestion-item--active"
+                        : "suggestion-item";
+                      const style = suggestion.active
+                        ? {
+                            backgroundColor: "#e8e8e8",
+                            cursor: "pointer",
+                            margin: "0.3em"
+                          }
+                        : {
+                            backgroundColor: "#ffffff",
+                            cursor: "pointer",
+                            margin: "0.3em"
+                          };
+                      return (
+                        <div
+                          {...getSuggestionItemProps(suggestion, {
+                            className,
+                            style
+                          })}
+                        >
+                          <span>{suggestion.description}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
+            )}
+          </PlacesAutocomplete>
+        </div>
+        <div className="form-group">
+          <label>&nbsp;Your Thank You Story</label>
+          <textarea
+            className="form-control"
+            name="description"
+            maxLength="3000"
+            value={this.state.description}
+            onChange={this.updateInputValue}
+            rows="10"
+          />
+          {this.state.description.length > 2500 && (
+            <React.Fragment>
+              <small>
+                &nbsp;
+                {this.remainingCharacters()}
+              </small>
+            </React.Fragment>
+          )}
+        </div>
+        <FormGroup>
+          <Label>Sincerely,</Label>
+          <Input
+            type="text"
+            name="posterName"
+            maxLength="100"
+            placeholder="Your Name Here"
+            value={this.state.posterName}
+            onBlur={this.validateInputs}
+            onChange={e => {
+              this.setState({ [e.target.name]: e.target.value }, () => {
+                if (!this.state.validation.thankeeName) {
+                  this.validateInputs();
+                }
+              });
+            }}
+            //valid={this.state.validation.thankeeName}
+            invalid={!this.state.validation.posterName}
+            required
+          />
+          <FormFeedback valid />
+          <FormFeedback>This field is required</FormFeedback>
+        </FormGroup>
+        <div className="form-group" style={{ minWidth: "22em" }}>
+          <label>&nbsp;Publication Date</label>
+          <div className="form-row">
+            <div className="col" style={{ maxWidth: "28%", minWidth: "9em" }}>
+              <DatePicker
+                selected={this.state.publishDate}
+                onChange={date =>
+                  this.setState({
+                    publishDate: date
+                  })
+                }
+                className="form-control text-center"
+                dateFormat="MMM D[,] YYYY"
+                minDate={moment().local()}
+                maxDate={moment().add(1, "years")}
+              />
             </div>
           </div>
-          <FormGroup>
-            <Label>&nbsp;Notify The Recipient of This Story</Label>
-            <Input
-              type="text"
-              name="thankeeEmail"
-              placeholder="Email Address (optional)"
-              maxLength="100"
-              value={this.state.thankeeEmail}
-              onChange={e => {
-                this.setState({ [e.target.name]: e.target.value }, () => {
-                  setTimeout(() => {
-                    this.validateInputs();
-                  }, 900);
-                });
-              }}
-              invalid={!this.state.validation.thankeeEmail}
-            />
-            <FormFeedback valid />
-            <FormFeedback>Invalid email address(es)</FormFeedback>
-          </FormGroup>
-          {/* <div className="form-group" style={{ minWidth: "22em" }}>
+        </div>
+        <FormGroup>
+          <Label>&nbsp;Notify The Recipient of This Story</Label>
+          <Input
+            type="text"
+            name="thankeeEmail"
+            placeholder="Email Address (optional)"
+            maxLength="100"
+            value={this.state.thankeeEmail}
+            onChange={e => {
+              this.setState({ [e.target.name]: e.target.value }, () => {
+                setTimeout(() => {
+                  this.validateInputs();
+                }, 900);
+              });
+            }}
+            invalid={!this.state.validation.thankeeEmail}
+          />
+          <FormFeedback valid />
+          <FormFeedback>Invalid email address(es)</FormFeedback>
+        </FormGroup>
+        {/* <div className="form-group" style={{ minWidth: "22em" }}>
             <label>&nbsp;Select When to Send a Notification Email</label>
             <div className="form-row">
               <div className="col" style={{ maxWidth: "28%", minWidth: "9em" }}>
@@ -503,8 +496,8 @@ class SubmitStory extends Component {
               <small className="text-red">Invalid start and end dates</small>
             )}
           </div> */}
-          <div className="text-right">
-            {/* <button
+        <div className="text-right">
+          {/* <button
                       className="btn-lg btn-danger"
                       onClick={() => {
                         this.validateInputs();
@@ -517,35 +510,34 @@ class SubmitStory extends Component {
                     >
                       Validate
                     </button> */}
-            {this.state.inEditMode && (
-              <button
-                className="btn btn-danger float-left"
-                onClick={() => this.setState({ deleteWarning: true })}
-              >
-                Delete
-              </button>
-            )}
+          {this.state.inEditMode && (
             <button
-              className="btn btn-muted"
-              onClick={() => this.props.history.push("/find")}
+              className="btn btn-danger float-left"
+              onClick={() => this.setState({ deleteWarning: true })}
             >
-              Cancel
+              Delete
             </button>
-            &nbsp;&nbsp;
-            <button
-              className="btn btn-primary"
-              onClick={() => {
-                console.log(this.getFormData());
+          )}
+          <button
+            className="btn btn-muted"
+            onClick={() => this.props.history.push("/find")}
+          >
+            Cancel
+          </button>
+          &nbsp;&nbsp;
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              console.log(this.getFormData());
+              this.handleSubmission();
+              this.validateInputs();
+              if (this.allValid()) {
                 this.handleSubmission();
-                this.validateInputs();
-                if (this.allValid()) {
-                  this.handleSubmission();
-                }
-              }}
-            >
-              {(this.state.inEditMode && "Update") || "Submit"}
-            </button>
-          </div>
+              }
+            }}
+          >
+            {(this.state.inEditMode && "Update") || "Submit"}
+          </button>
         </div>
         <SweetAlert
           show={this.state.deleteWarning}
