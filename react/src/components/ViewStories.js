@@ -174,7 +174,11 @@ class ViewStories extends Component {
           </div>
           <div className="results-container">
             <table className="table table-light table-bordered table-striped">
-              <tbody>{this.state.stories.map(story => ResultRow(story))}</tbody>
+              <tbody>
+                {this.state.stories.map((story, index) => (
+                  <ResultRow key={story.id} idx={index} story={story} />
+                ))}
+              </tbody>
             </table>
           </div>
         </div>

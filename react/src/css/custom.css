@@ -27,3 +27,20 @@ body {
   -ms-overflow-style: -ms-autohiding-scrollbar;
   background-color: rgb(214, 214, 214);
 }
+
+.popover-close-btn {
+  width: 1.4em;
+  height: 1.4em;
+  line-height: 1.4em;
+  text-align: center;
+  color: rgb(61, 57, 57);
+  border-radius: 50%;
+  background-color: rgb(204, 204, 204);
+}
+
+.popover-close-btn:hover {
+  cursor: pointer;
+  color: rgb(201, 201, 201);
+  border-radius: 50%;
+  background-color: rgb(99, 99, 99);
+}
