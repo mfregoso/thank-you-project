@@ -52,3 +52,12 @@ body {
 .marker-desc {
   padding: 0.35em 0 0.35em 0;
 }
+
+.marker-btn-circle {
+  width: 1em !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  height: 1em;
+  line-height: 1em;
+  border-radius: 50% !important;
+}

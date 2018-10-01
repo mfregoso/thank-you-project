@@ -17,7 +17,7 @@ class MapMarkers extends Component {
 
   render() {
     const { story } = this.props;
-    let copy = story;
+    let copy = { ...story };
     if (story.description.length > 60) {
       let description = story.description.substr(0, 60) + "...";
       copy = {
@@ -28,14 +28,12 @@ class MapMarkers extends Component {
     }
     return (
       <span>
-        <Button
-          className="mr-1"
-          color="secondary"
+        <button
+          className="btn btn-sm btn-danger marker-btn-circle"
+          color="success"
           id={"Popover-" + copy.id}
           onClick={this.toggle}
-        >
-          {copy.thankeeName}
-        </Button>
+        />
         <Popover
           placement={"auto"}
           isOpen={this.state.popoverOpen}
@@ -44,7 +42,7 @@ class MapMarkers extends Component {
           style={{ width: "17em" }}
         >
           <PopoverHeader>
-            {copy.dayOfStory}
+            <small>{copy.dayOfStory}</small>
             <span
               className="float-right popover-close-btn"
               onClick={this.toggle}
@@ -53,7 +51,9 @@ class MapMarkers extends Component {
             </span>
           </PopoverHeader>
           <PopoverBody>
-            <div className="font-weight-bold">{copy.thankeeName},</div>
+            <div className="font-weight-bold">
+              <big>{copy.thankeeName}</big>,
+            </div>
             <div
               className="marker-desc"
               style={{
