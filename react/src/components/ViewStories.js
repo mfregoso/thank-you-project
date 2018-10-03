@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { GetAllStories } from "../services/story.service";
+import { GetAllStories, GetNearbyStories } from "../services/story.service";
 //import GetUserLocation from "../services/googleGeolocate.service";
 import GoogleMapReact from "google-map-react";
 import PlacesAutocomplete, {
@@ -26,19 +26,27 @@ class ViewStories extends Component {
     selectedStory: {}
   };
 
-  componentDidMount() {
-    GetAllStories().then(resp => {
+  GetByLocation = (lat, lng, radius) => {
+    GetNearbyStories(lat, lng, radius).then(resp => {
       let stories = this.reformatStories(resp.data.items);
       this.setState({ stories });
     });
+  };
+
+  componentDidMount() {
+    // GetAllStories().then(resp => {
+    //   let stories = this.reformatStories(resp.data.items);
+    //   this.setState({ stories });
+    // });
     if (this.props.userLongitude && this.props.userLatitude) {
       this.setState({
         latitude: this.props.userLatitude,
         longitude: this.props.userLongitude
       });
+      this.GetByLocation(this.props.userLatitude, this.props.userLongitude);
     }
     if (!this.props.userLongitude && !this.props.userLatitude) {
-      //this.props.history.push("/");
+      this.props.history.push("/");
       // GetUserLocation().then(resp => {
       //   let { lat, lng } = resp.data.location;
       //   this.props.sendLatitude(lat);
@@ -79,8 +87,9 @@ class ViewStories extends Component {
         this.setState({
           latitude: latLng.lat,
           longitude: latLng.lng,
-          zoomLevel: 14
+          zoomLevel: 13
         });
+        this.GetByLocation(latLng.lat, latLng.lng);
       })
       .catch(error => console.error("Error", error));
   };
@@ -124,7 +133,7 @@ class ViewStories extends Component {
   render() {
     const mapOptions = {
       scrollwheel: true,
-      minZoom: 8
+      minZoom: 11
       // hide: [
       //   {
       //     featureType: "all",
@@ -229,7 +238,7 @@ class ViewStories extends Component {
               lat: this.state.latitude || 33.9860021,
               lng: this.state.longitude || -118.3966412
             }}
-            defaultZoom={12}
+            defaultZoom={14}
             zoom={this.state.zoomLevel || 12}
             options={mapOptions}
             //onChange={this.handleMapChanges} // callback with all kinds of useful information

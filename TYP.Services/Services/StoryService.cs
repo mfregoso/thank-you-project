@@ -12,10 +12,50 @@ using TYP.Models.Requests;
 
 namespace TYP.Services.Services
 {
-    //private readonly object connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
     public class StoryService : IStoryService
     {
         readonly string connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+
+        public List<Story> GetNearbyStories(string Lat, string Lng, int Radius)
+        {
+            List<Story> stories = new List<Story>();
+            using (SqlConnection sql = new SqlConnection(connectionString))
+            {
+                sql.Open();
+                using (SqlCommand cmd = sql.CreateCommand())
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandText = "Story_SelectNearby";
+                    cmd.Parameters.AddWithValue("@Lat", Lat);
+                    cmd.Parameters.AddWithValue("@Long", Lng);
+                    cmd.Parameters.AddWithValue("@Radius", Radius*1600);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Story story = new Story()
+                        {
+                            Id = (int)reader["Id"],
+                            PosterName = (string)reader["PosterName"],
+                            Description = (string)reader["Description"],
+                            ThankeeName = (string)reader["ThankeeName"],
+                            Location = (string)reader["Location"],
+                            Latitude = (double)reader["Latitude"],
+                            Longitude = (double)reader["Longitude"],
+                            StoryDate = (DateTime)reader["StoryDate"],
+                            PublishDate = (DateTime)reader["PublishDate"]
+                        };
+                        object thankeeEmail = reader["ThankeeEmail"]; // catch possible DBNull.Value from SQL
+                        if (thankeeEmail != DBNull.Value)
+                        {
+                            story.ThankeeEmail = (string)thankeeEmail;
+                        }
+                        stories.Add(story);
+                    };
+                }
+            }
+            return stories;
+        }
 
         public List<Story> GetAll()
         {

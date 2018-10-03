@@ -37,9 +37,9 @@ export function GetAllStories() {
   });
 }
 
-export function GetNearbyStories(lat, long, distance) {
+export function GetNearbyStories(lat, long, radius = 7) {
   return axios({
     method: "get",
-    url: `/api/stories?lat=${lat}&long=${long}` // future: radius distance?
+    url: `/api/stories?Lat=${lat}&Lng=${long}&Radius=${radius}` // future: radius distance?
   });
 }

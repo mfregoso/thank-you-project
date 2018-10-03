@@ -34,6 +34,17 @@ namespace TYP.Web.Controllers.Api
             return Request.CreateResponse(HttpStatusCode.OK, stories);
         }
 
+        [Route, HttpGet]
+        public HttpResponseMessage GetByLocation(string Lat, string Lng, int Radius)
+        {
+            ItemsResponse<Story> stories = new ItemsResponse<Story>();
+
+            List<Story> allStories = storyService.GetNearbyStories(Lat, Lng, Radius);
+            stories.Items = allStories;
+
+            return Request.CreateResponse(HttpStatusCode.OK, stories);
+        }
+
         [Route("{Id:int}"), HttpGet]
         public HttpResponseMessage GetById(int Id)
         {
