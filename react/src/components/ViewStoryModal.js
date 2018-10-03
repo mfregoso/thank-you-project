@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Modal, ModalHeader, ModalBody } from "reactstrap";
 import { withRouter } from "react-router";
+import "../css/custom.css";
 
 class ViewStoryModal extends Component {
   render() {
@@ -21,26 +22,28 @@ class ViewStoryModal extends Component {
             <big>&nbsp;Thank You, {story.thankeeName}</big>
           </ModalHeader>
           <ModalBody style={{ padding: "1.7em 2.4em 1.6em 2.4em" }}>
-            On {story.dayOfStory} at {story.location},<br />
-            <div
-              className="marker-desc"
-              style={{
-                whiteSpace: "pre-wrap",
-                width: "100%"
-              }}
-            >
-              {story.description}
-            </div>
-            <div className="font-italic">Sincerely,</div>
-            <div>
-              <button
-                className="float-right btn btn-sm btn-muted"
-                style={{ position: "relative", top: "-0.5em" }}
-                onClick={() => this.props.history.push("/edit/" + story.id)}
+            <div className="story-modal-container">
+              On {story.dayOfStory} at {story.location},<br />
+              <div
+                className="marker-desc"
+                style={{
+                  whiteSpace: "pre-wrap",
+                  width: "100%"
+                }}
               >
-                Edit
-              </button>
-              <strong>- {story.posterName}</strong>
+                {story.description}
+              </div>
+              <div className="font-italic">Sincerely,</div>
+              <div>
+                <button
+                  className="float-right btn btn-sm btn-muted"
+                  style={{ position: "relative", top: "-0.5em" }}
+                  onClick={() => this.props.history.push("/edit/" + story.id)}
+                >
+                  Edit
+                </button>
+                <strong>- {story.posterName}</strong>
+              </div>
             </div>
           </ModalBody>
         </Modal>

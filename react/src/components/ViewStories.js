@@ -87,7 +87,7 @@ class ViewStories extends Component {
         this.setState({
           latitude: latLng.lat,
           longitude: latLng.lng,
-          zoomLevel: 13
+          zoomLevel: 14
         });
         this.GetByLocation(latLng.lat, latLng.lng);
       })
@@ -133,7 +133,7 @@ class ViewStories extends Component {
   render() {
     const mapOptions = {
       scrollwheel: true,
-      minZoom: 11
+      minZoom: 12
       // hide: [
       //   {
       //     featureType: "all",
