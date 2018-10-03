@@ -163,7 +163,7 @@ class SubmitStory extends Component {
     } else {
       let data = this.getFormData();
       CreateStory(data)
-        .then(resp => this.props.history.push("/find"))
+        .then(resp => this.props.history.push("/discover"))
         .catch(err => console.log(err));
     }
   };
@@ -188,7 +188,9 @@ class SubmitStory extends Component {
     this.setState({ deleteWarning: false });
     //alert("confirmed delete for " + this.state.storyId);
     if (this.state.storyId) {
-      DeleteStory(this.state.storyId).then(this.props.history.push("/find"));
+      DeleteStory(this.state.storyId).then(
+        this.props.history.push("/discover")
+      );
     }
   };
 
@@ -520,15 +522,14 @@ class SubmitStory extends Component {
           )}
           <button
             className="btn btn-muted"
-            onClick={() => this.props.history.push("/find")}
+            onClick={() => this.props.history.push("/discover")}
           >
             Cancel
           </button>
           &nbsp;&nbsp;
           <button
-            className="btn btn-primary"
+            className="btn btn-success"
             onClick={() => {
-              console.log(this.getFormData());
               this.handleSubmission();
               this.validateInputs();
               if (this.allValid()) {
@@ -536,7 +537,7 @@ class SubmitStory extends Component {
               }
             }}
           >
-            {(this.state.inEditMode && "Update") || "Submit"}
+            {(this.state.inEditMode && "Update") || "Share"}
           </button>
         </div>
         <SweetAlert

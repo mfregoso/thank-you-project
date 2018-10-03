@@ -17,8 +17,8 @@ class ResultRow extends Component {
           </td>
           <td className="align-middle">
             <button
-              className="btn btn-sm btn-info"
-              onClick={() => this.props.history.push("/edit/" + story.id)}
+              className="btn btn-sm btn-success"
+              onClick={() => this.props.selectStory(this.props.idx)}
             >
               View
             </button>

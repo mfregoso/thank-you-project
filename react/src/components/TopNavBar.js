@@ -22,7 +22,7 @@ class TopNavBar extends Component {
     return (
       <React.Fragment>
         <Navbar
-          color="dark"
+          color="success"
           dark={true}
           expand="md"
           style={{ marginBottom: "3em" }}
@@ -31,7 +31,7 @@ class TopNavBar extends Component {
             href="javascript:(0)"
             onClick={() => this.props.history.push("/")}
           >
-            by mfregoso
+            TYP <small>by mfregoso</small>
           </NavbarBrand>
           <NavbarToggler onClick={this.toggleMenu} />
           <Collapse isOpen={this.state.isOpen} navbar>
@@ -40,10 +40,10 @@ class TopNavBar extends Component {
                 <NavLink
                   href="javascript:(0)"
                   className="pointer"
-                  active={location.pathname === "/find"}
-                  onClick={() => this.props.history.push("/find")}
+                  active={location.pathname === "/discover"}
+                  onClick={() => this.props.history.push("/discover")}
                 >
-                  Find Stories
+                  Discover Stories
                 </NavLink>
               </NavItem>
               <NavItem>

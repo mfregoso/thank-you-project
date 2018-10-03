@@ -11,6 +11,7 @@ import { Input, InputGroup, InputGroupAddon, Button } from "reactstrap";
 import MapMarkers from "./MapMarkers";
 import moment from "moment";
 import ResultRow from "./ResultRow";
+import ViewStoryModal from "./ViewStoryModal";
 import "../css/custom.css";
 
 class ViewStories extends Component {
@@ -20,7 +21,9 @@ class ViewStories extends Component {
     longitude: null,
     isGeocoding: false,
     location: "",
-    filteredStories: null
+    filteredStories: null,
+    storyModal: false,
+    selectedStory: {}
   };
 
   componentDidMount() {
@@ -51,6 +54,22 @@ class ViewStories extends Component {
     }
   }
 
+  setSelectedStory = idx => {
+    const selectedStory = this.state.stories[idx];
+    this.setState({ selectedStory, storyModal: true });
+  };
+
+  toggleModal = isOpen => {
+    if (isOpen === false) {
+      this.setState({
+        storyModal: isOpen,
+        selectedStory: {}
+      });
+    } else {
+      this.setState({ storyModal: isOpen });
+    }
+  };
+
   handleMapsAutocomplete = location => {
     //let nameOnly = location.substr(0, location.indexOf(","));
     this.setState({ location });
@@ -69,7 +88,7 @@ class ViewStories extends Component {
   reformatStories = stories => {
     let reformatted = stories.map(story => {
       let dayOfStory = moment(story.storyDate, "YYYY-MM-DD").format(
-        "dddd, MMM D, YYYY"
+        "dddd, MMMM D, YYYY"
       );
       return {
         ...story,
@@ -116,7 +135,7 @@ class ViewStories extends Component {
     };
     return (
       <div className="container-fluid view-spacer">
-        <div className="float-right col-xl-3 col-lg-3 col-md-12 col-xs-12">
+        <div className="float-right col-xl-4 col-lg-4 col-md-12 col-xs-12">
           <div className="form-group">
             <PlacesAutocomplete
               value={this.state.location}
@@ -183,14 +202,19 @@ class ViewStories extends Component {
             <table className="table table-light table-bordered table-striped">
               <tbody>
                 {this.state.stories.map((story, index) => (
-                  <ResultRow key={story.id} idx={index} story={story} />
+                  <ResultRow
+                    key={story.id}
+                    idx={index}
+                    story={story}
+                    selectStory={this.setSelectedStory}
+                  />
                 ))}
               </tbody>
             </table>
           </div>
         </div>
         <div
-          className="float-left col-xl-9 col-lg-9 col-md-12 col-xs-12"
+          className="float-left col-xl-8 col-lg-8 col-md-12 col-xs-12"
           style={{ height: "90vh" }}
         >
           <GoogleMapReact
@@ -210,19 +234,28 @@ class ViewStories extends Component {
             options={mapOptions}
             //onChange={this.handleMapChanges} // callback with all kinds of useful information
           >
-            {(this.state.filteredStories || this.state.stories).map(story => {
-              return (
-                <MapMarkers
-                  key={story.id}
-                  id={story.id}
-                  lat={story.latitude}
-                  lng={story.longitude}
-                  story={story}
-                />
-              );
-            })}
+            {(this.state.filteredStories || this.state.stories).map(
+              (story, index) => {
+                return (
+                  <MapMarkers
+                    key={story.id}
+                    idx={index}
+                    id={story.id}
+                    lat={story.latitude}
+                    lng={story.longitude}
+                    story={story}
+                    selectStory={this.setSelectedStory}
+                  />
+                );
+              }
+            )}
           </GoogleMapReact>
         </div>
+        <ViewStoryModal
+          showModal={this.state.storyModal}
+          toggle={() => this.toggleModal(false)}
+          story={this.state.selectedStory}
+        />
       </div>
     );
   }
