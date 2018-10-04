@@ -13,22 +13,31 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TYP.Services", "TYP.Service
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Azure|Any CPU = Azure|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ECCF1B2E-DB12-4E8F-9573-3DE6FF101F32}.Azure|Any CPU.ActiveCfg = Azure|Any CPU
+		{ECCF1B2E-DB12-4E8F-9573-3DE6FF101F32}.Azure|Any CPU.Build.0 = Azure|Any CPU
 		{ECCF1B2E-DB12-4E8F-9573-3DE6FF101F32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ECCF1B2E-DB12-4E8F-9573-3DE6FF101F32}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ECCF1B2E-DB12-4E8F-9573-3DE6FF101F32}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ECCF1B2E-DB12-4E8F-9573-3DE6FF101F32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A84B80F-CEC2-49C9-8D4E-910349508CB3}.Azure|Any CPU.ActiveCfg = Azure|Any CPU
+		{0A84B80F-CEC2-49C9-8D4E-910349508CB3}.Azure|Any CPU.Build.0 = Azure|Any CPU
 		{0A84B80F-CEC2-49C9-8D4E-910349508CB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0A84B80F-CEC2-49C9-8D4E-910349508CB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A84B80F-CEC2-49C9-8D4E-910349508CB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0A84B80F-CEC2-49C9-8D4E-910349508CB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF402C38-8250-4DE0-ACE3-A530ECF8E4D6}.Azure|Any CPU.ActiveCfg = Azure|Any CPU
+		{AF402C38-8250-4DE0-ACE3-A530ECF8E4D6}.Azure|Any CPU.Build.0 = Azure|Any CPU
 		{AF402C38-8250-4DE0-ACE3-A530ECF8E4D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AF402C38-8250-4DE0-ACE3-A530ECF8E4D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF402C38-8250-4DE0-ACE3-A530ECF8E4D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF402C38-8250-4DE0-ACE3-A530ECF8E4D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08FD62AE-FD81-4CDE-91A3-AB99D1870578}.Azure|Any CPU.ActiveCfg = Azure|Any CPU
+		{08FD62AE-FD81-4CDE-91A3-AB99D1870578}.Azure|Any CPU.Build.0 = Azure|Any CPU
 		{08FD62AE-FD81-4CDE-91A3-AB99D1870578}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{08FD62AE-FD81-4CDE-91A3-AB99D1870578}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08FD62AE-FD81-4CDE-91A3-AB99D1870578}.Release|Any CPU.ActiveCfg = Release|Any CPU

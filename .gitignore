@@ -5,6 +5,12 @@
 *.csproj merge=binary
 dest/
 
+# sensitive files
+TYP.Web/Properties/PublishProfiles
+
+# react build output
+TYP.Web/Client
+
 # User-specific files
 *.suo
 *.user
@@ -265,3 +271,5 @@ __pycache__/
 *.pyc
 
 package-lock.json
+TYP.Web/Web.Azure.config
+TYP.Web/AzureSql.config
