@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { GetAllStories, GetNearbyStories } from "../services/story.service";
+import { GetNearbyStories } from "../services/story.service";
 //import GetUserLocation from "../services/googleGeolocate.service";
 import GoogleMapReact from "google-map-react";
 import PlacesAutocomplete, {
@@ -23,21 +23,19 @@ class ViewStories extends Component {
     location: "",
     filteredStories: null,
     storyModal: false,
-    selectedStory: {}
+    selectedStory: {},
+    isLoading: false
   };
 
   GetByLocation = (lat, lng, radius) => {
+    this.setState({ isLoading: true });
     GetNearbyStories(lat, lng, radius).then(resp => {
       let stories = this.reformatStories(resp.data.items);
-      this.setState({ stories });
+      this.setState({ stories, isLoading: false });
     });
   };
 
   componentDidMount() {
-    // GetAllStories().then(resp => {
-    //   let stories = this.reformatStories(resp.data.items);
-    //   this.setState({ stories });
-    // });
     if (this.props.userLongitude && this.props.userLatitude) {
       this.setState({
         latitude: this.props.userLatitude,
@@ -142,6 +140,45 @@ class ViewStories extends Component {
       //   }
       // ]
     };
+
+    const noStoriesFound = () => {
+      if (!this.state.isLoading && this.state.stories.length === 0) {
+        return (
+          <React.Fragment>
+            <tr>
+              <td>
+                <div className="font-weight-bold">
+                  This area doesn't have any stories yet.
+                </div>
+                <div className="font-weight-bold">
+                  Would you like to{" "}
+                  <a
+                    href="javascript:(0)"
+                    onClick={() => this.props.history.push("/share")}
+                  >
+                    Share a Story
+                  </a>
+                  ?
+                </div>
+              </td>
+            </tr>
+          </React.Fragment>
+        );
+      }
+    };
+
+    const loadingMessage = () => {
+      return (
+        <React.Fragment>
+          <tr>
+            <td>
+              <div className="font-weight-bold">Searching for stories...</div>
+            </td>
+          </tr>
+        </React.Fragment>
+      );
+    };
+
     return (
       <div className="container-fluid view-spacer">
         <div className="float-right col-xl-4 col-lg-4 col-md-12 col-xs-12">
@@ -210,6 +247,7 @@ class ViewStories extends Component {
           <div className="results-container">
             <table className="table table-light table-bordered table-striped">
               <tbody>
+                {this.state.isLoading ? loadingMessage() : noStoriesFound()}
                 {this.state.stories.map((story, index) => (
                   <ResultRow
                     key={story.id}
