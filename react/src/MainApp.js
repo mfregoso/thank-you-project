@@ -18,7 +18,15 @@ class Routes extends Component {
             path="/edit/:id"
             render={props => <SubmitStory {...props} />}
           />
-          <Route path="/discover" render={props => <ViewStories {...props} />} />
+          <Route
+            exact
+            path="/view/:slug"
+            render={props => <SubmitStory {...props} />}
+          />
+          <Route
+            path="/discover"
+            render={props => <ViewStories {...props} />}
+          />
         </Switch>
       </div>
     );
