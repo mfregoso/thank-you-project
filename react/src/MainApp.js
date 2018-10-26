@@ -4,6 +4,7 @@ import NavBar from "./components/TopNavBar";
 import LandingPage from "./components/LandingPage";
 import SubmitStory from "./components/SubmitStory";
 import ViewStories from "./components/ViewStories";
+import ViewStory from "./components/ViewStory";
 
 class Routes extends Component {
   render() {
@@ -21,7 +22,7 @@ class Routes extends Component {
           <Route
             exact
             path="/view/:slug"
-            render={props => <SubmitStory {...props} />}
+            render={props => <ViewStory {...props} />}
           />
           <Route
             path="/discover"
