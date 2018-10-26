@@ -68,8 +68,11 @@ class ViewStory extends Component {
             <strong>- {this.state.posterName}</strong>
           </div>
           <br />
-          This story happened on {this.state.dayOfStory} at{" "}
-          {this.state.location}.
+          <div>
+            This story happened on {this.state.dayOfStory} at{" "}
+            {this.state.location}.
+          </div>
+          <br />
         </div>
       </div>
     );

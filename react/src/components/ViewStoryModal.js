@@ -6,6 +6,13 @@ import "../css/custom.css";
 class ViewStoryModal extends Component {
   render() {
     const { story } = this.props;
+    const computeSlug = input =>
+      input
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "-")
+        .replace(/^-+|-+$/g, "");
+
     return (
       <React.Fragment>
         <Modal
@@ -38,9 +45,15 @@ class ViewStoryModal extends Component {
                 <button
                   className="float-right btn btn-sm btn-muted"
                   style={{ position: "relative", top: "-0.5em" }}
-                  onClick={() => this.props.history.push("/edit/" + story.id)}
+                  onClick={() =>
+                    this.props.history.push(
+                      `/view/thank-you-${computeSlug(story.thankeeName)}-${
+                        story.id
+                      }`
+                    )
+                  }
                 >
-                  Edit
+                  Permalink
                 </button>
                 <strong>- {story.posterName}</strong>
               </div>

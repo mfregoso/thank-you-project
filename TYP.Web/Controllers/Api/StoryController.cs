@@ -21,18 +21,6 @@ namespace TYP.Web.Controllers.Api
         {
             this.storyService = storyService;
         }
-        //StoryService service = new StoryService();
-        
-        [Route, HttpGet]
-        public HttpResponseMessage GetAll()
-        {
-            ItemsResponse<Story> stories = new ItemsResponse<Story>();         
-
-            List<Story> allStories = storyService.GetAll();
-            stories.Items = allStories;
-
-            return Request.CreateResponse(HttpStatusCode.OK, stories);
-        }
 
         [Route, HttpGet]
         public HttpResponseMessage GetByLocation(string Lat, string Lng, int Radius)
