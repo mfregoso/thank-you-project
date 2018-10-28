@@ -69,6 +69,7 @@ class ViewStory extends Component {
           </div>
           <br />
           <div>
+            {/* Visual improvement needed here */}
             This story happened on {this.state.dayOfStory} at{" "}
             {this.state.location}.
           </div>
