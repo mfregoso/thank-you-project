@@ -11,7 +11,6 @@ namespace TYP.Services.Interfaces
     public interface IStoryService
     {
         List<Story> GetNearbyStories(string Lat, string Lng, int Radius);
-        List<Story> GetAll();
         int CreateStory(CreateStory story);
         Story GetById(int Id);
         void UpdateStory(UpdateStory story);

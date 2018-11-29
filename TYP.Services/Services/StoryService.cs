@@ -9,16 +9,20 @@ using System.Threading.Tasks;
 using TYP.Models.Domain;
 using TYP.Services.Interfaces;
 using TYP.Models.Requests;
+using TYP.Services.Extensions;
 
 namespace TYP.Services.Services
 {
     public class StoryService : IStoryService
     {
-        readonly string connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+        private readonly string connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+        private readonly int MAX_DISTANCE_MILES = 20;
 
         public List<Story> GetNearbyStories(string Lat, string Lng, int Radius)
         {
             List<Story> stories = new List<Story>();
+            int MaxRadius = Math.Min(MAX_DISTANCE_MILES, Radius);
+
             using (SqlConnection sql = new SqlConnection(connectionString))
             {
                 sql.Open();
@@ -28,7 +32,7 @@ namespace TYP.Services.Services
                     cmd.CommandText = "Story_SelectNearby";
                     cmd.Parameters.AddWithValue("@Lat", Lat);
                     cmd.Parameters.AddWithValue("@Long", Lng);
-                    cmd.Parameters.AddWithValue("@Radius", Radius*1600);
+                    cmd.Parameters.AddWithValue("@Radius", MaxRadius * 1600);
 
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
@@ -45,50 +49,8 @@ namespace TYP.Services.Services
                             StoryDate = (DateTime)reader["StoryDate"],
                             PublishDate = (DateTime)reader["PublishDate"]
                         };
-                        object thankeeEmail = reader["ThankeeEmail"]; // catch possible DBNull.Value from SQL
-                        if (thankeeEmail != DBNull.Value)
-                        {
-                            story.ThankeeEmail = (string)thankeeEmail;
-                        }
                         stories.Add(story);
                     };
-                }
-            }
-            return stories;
-        }
-
-        public List<Story> GetAll()
-        {
-            List<Story> stories = new List<Story>();
-            using (SqlConnection sql = new SqlConnection(connectionString))
-            {
-                sql.Open();
-                using (SqlCommand cmd = sql.CreateCommand())
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.CommandText = "Story_SelectAll";
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        Story story = new Story()
-                        {
-                            Id = (int)reader["Id"],
-                            PosterName = (string)reader["PosterName"],
-                            Description = (string)reader["Description"],
-                            ThankeeName = (string)reader["ThankeeName"],
-                            Location = (string)reader["Location"],
-                            Latitude = (double)reader["Latitude"],
-                            Longitude = (double)reader["Longitude"],
-                            StoryDate = (DateTime)reader["StoryDate"],
-                            PublishDate = (DateTime)reader["PublishDate"]
-                        };
-                        object thankeeEmail = reader["ThankeeEmail"]; // catch possible DBNull.Value from SQL
-                        if (thankeeEmail != DBNull.Value)
-                        {
-                            story.ThankeeEmail = (string)thankeeEmail;
-                        }
-                        stories.Add(story);
-                    };                        
                 }
             }
             return stories;
@@ -116,12 +78,7 @@ namespace TYP.Services.Services
                         story.Latitude = (double)reader["Latitude"];
                         story.Longitude = (double)reader["Longitude"];
                         story.StoryDate = (DateTime)reader["StoryDate"];
-                        story.PublishDate = (DateTime)reader["PublishDate"];
-                        object thankeeEmail = reader["ThankeeEmail"]; // catch possible DBNull.Value from SQL
-                        if (thankeeEmail != DBNull.Value)
-                        {
-                            story.ThankeeEmail = (string)thankeeEmail; 
-                        }
+                        story.PublishDate = (DateTime)reader["PublishDate"];                        
                      };
                 }
             }
@@ -176,7 +133,7 @@ namespace TYP.Services.Services
                     cmd.Parameters.AddWithValue("@PublishDate", story.PublishDate);
                     cmd.Parameters.AddWithValue("@Latitude", story.Latitude);
                     cmd.Parameters.AddWithValue("@Longitude", story.Longitude);
-                    cmd.Parameters.AddWithValue("@ThankeeEmail", story.ThankeeEmail);
+                    //cmd.Parameters.AddWithValue("@ThankeeEmail", story.ThankeeEmail); // need to re-enable in stored procedure
                     cmd.ExecuteNonQuery();
                 }
             }

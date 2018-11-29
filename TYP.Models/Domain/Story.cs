@@ -14,7 +14,7 @@ namespace TYP.Models.Domain
         public DateTime StoryDate { get; set; }
         public string PosterName { get; set; }
         public string ThankeeName { get; set; }
-        public string ThankeeEmail { get; set; }
+        //public string ThankeeEmail { get; set; }
         public string Location { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }

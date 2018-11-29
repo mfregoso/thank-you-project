@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\SqlHelpers.cs" />
     <Compile Include="Interfaces\IStoryService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\StoryService.cs" />

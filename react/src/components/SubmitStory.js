@@ -70,7 +70,7 @@ class SubmitStory extends Component {
           posterName: story.posterName,
           location: story.location || "",
           description: story.description || "",
-          thankeeEmail: story.thankeeEmail || "",
+          //thankeeEmail: story.thankeeEmail || "",
           publishDate: moment(story.publishDate.substr(0, 10)),
           latitude: story.latitude,
           longitude: story.longitude,
@@ -106,6 +106,7 @@ class SubmitStory extends Component {
         publishDate: moment().local(),
         latitude: null,
         longitude: null,
+        disableAutocomplete: false,
         storyId: null,
         inEditMode: false
       });
@@ -121,12 +122,13 @@ class SubmitStory extends Component {
       longitude: this.state.longitude.toString(),
       description: this.state.description,
       posterName: this.state.posterName,
-      thankeeEmail: this.state.thankeeEmail,
       storyDate: this.state.storyDate.format("YYYY-MM-DD"),
       publishDate: this.state.publishDate.format("YYYY-MM-DD")
     };
     if (this.state.inEditMode) {
       formData.id = this.state.storyId;
+    } else {
+      formData.thankeeEmail = this.state.thankeeEmail;
     }
     return formData;
   };
@@ -441,26 +443,28 @@ class SubmitStory extends Component {
             </div>
           </div>
         </div>
-        <FormGroup>
-          <Label>&nbsp;Notify The Recipient of This Story</Label>
-          <Input
-            type="text"
-            name="thankeeEmail"
-            placeholder="Email Address (optional)"
-            maxLength="100"
-            value={this.state.thankeeEmail}
-            onChange={e => {
-              this.setState({ [e.target.name]: e.target.value }, () => {
-                setTimeout(() => {
-                  this.validateInputs();
-                }, 900);
-              });
-            }}
-            invalid={!this.state.validation.thankeeEmail}
-          />
-          <FormFeedback valid />
-          <FormFeedback>Invalid email address(es)</FormFeedback>
-        </FormGroup>
+        {!this.state.inEditMode && (
+          <FormGroup>
+            <Label>&nbsp;Notify The Recipient of This Story</Label>
+            <Input
+              type="text"
+              name="thankeeEmail"
+              placeholder="Email Address (NOT YET IMPLEMENTED)"
+              maxLength="100"
+              value={this.state.thankeeEmail}
+              onChange={e => {
+                this.setState({ [e.target.name]: e.target.value }, () => {
+                  setTimeout(() => {
+                    this.validateInputs();
+                  }, 900);
+                });
+              }}
+              invalid={!this.state.validation.thankeeEmail}
+            />
+            <FormFeedback valid />
+            <FormFeedback>Invalid email address(es)</FormFeedback>
+          </FormGroup>
+        )}
         {/* <div className="form-group" style={{ minWidth: "22em" }}>
             <label>&nbsp;Select When to Send a Notification Email</label>
             <div className="form-row">
