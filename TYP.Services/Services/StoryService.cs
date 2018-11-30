@@ -109,6 +109,15 @@ namespace TYP.Services.Services
                     cmd.ExecuteNonQuery();
 
                     int storyId = (int)cmd.Parameters["@Id"].Value;
+
+                    if (story.ThankeeEmail != null)
+                    {
+                        Task.Run(async() =>
+                        {
+                            await SendGridService.NotifyRecipient(story.ThankeeEmail, story.ThankeeName, story.PosterName, storyId);
+                        });
+                    }
+
                     return storyId;
                 }
             }            

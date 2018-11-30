@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SendGrid;
 using SendGrid.Helpers.Mail;
+using TYP.Services.Utilities;
 
 namespace TYP.Services.Services
 {
@@ -19,27 +20,27 @@ namespace TYP.Services.Services
         {
             var apiKey = ApiKeys.SendGrid();
             var client = new SendGridClient(apiKey);
-            var from = new EmailAddress("typ@mfregoso.com", "TYP Dev");
+            var from = new EmailAddress("noreply@oktest.com", "TYP Dev");
             var subject = "Sending with SendGrid is Fun";
-            var to = new EmailAddress("m4goso@gmail.com", "MF");
+            var to = new EmailAddress("recipient@email.com", "MF");
             var plainTextContent = "and easy to do anywhere, even with C#";
             var htmlContent = "<strong>and easy to do anywhere, even with C#</strong>";
             var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
             var response = await client.SendEmailAsync(msg);
         }
 
-        public async Task<Response> NotifyRecipient(string ThankeeEmail, string ThankeeName, string PosterName, int StoryId)
+        public static async Task<Response> NotifyRecipient(string ThankeeEmail, string ThankeeName, string PosterName, int StoryId)
         {
-            string test = "hello you " + StoryId.ToString();
-            string newt = test.ToLower().Replace(" ", "-");
+            string test = "thank you " + RegEx.GetSlug(ThankeeName) + " " + StoryId.ToString();
+            string storyUrl = "https://thankyouproject.azurewebsites.net/view/" + test.Replace(" ", "-");
 
             var apiKey = ApiKeys.SendGrid();
             var client = new SendGridClient(apiKey);
-            var from = new EmailAddress("noreply@thank-you-project.com", "Thank You Project");
+            var from = new EmailAddress("no-reply@thank-you-project.com", "Thank You Project");
             var subject = "You have a Thank You Story from " + PosterName;
             var to = new EmailAddress(ThankeeEmail, ThankeeName);
-            var plainTextContent = "and easy to do anywhere, even with C#";
-            var htmlContent = "<strong>and easy to do anywhere, even with C#</strong>";
+            var plainTextContent = "Your story on the Thank You Project can be found at: " + storyUrl;
+            var htmlContent = "Click here to view your story on the Thank You Project: " + "<a href='" + storyUrl + "'>" + storyUrl + "</a>";
             var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
             var response = await client.SendEmailAsync(msg);
 

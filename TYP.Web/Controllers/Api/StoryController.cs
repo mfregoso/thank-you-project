@@ -24,14 +24,12 @@ namespace TYP.Web.Controllers.Api
         }
 
         [Route("test"), HttpGet]
-        public HttpResponseMessage TestStuff(string ThankeeName, int StoryId)
+        public HttpResponseMessage TestStuff()
         {
-            //string siteURL = ConfigurationManager.AppSettings["SiteUrlOrigin"];
+            string siteURL = ConfigurationManager.AppSettings["SiteUrlOrigin"];
             //SendGridService.Main();
-            string test = "thank you " + ThankeeName + " " + StoryId.ToString();
-            string storyUrl = "https://thankyouproject.azurewebsites.net/view/" + test.ToLower().Replace(" ", "-");
 
-            return Request.CreateResponse(HttpStatusCode.OK, storyUrl);
+            return Request.CreateResponse(HttpStatusCode.OK, siteURL);
         }
 
         [Route, HttpGet]
