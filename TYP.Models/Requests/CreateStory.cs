@@ -20,6 +20,7 @@ namespace TYP.Models.Requests
         [Required, MaxLength(100)]
         public string ThankeeName { get; set; }
         [MaxLength(100)]
+        [EmailAddress]
         public string ThankeeEmail { get; set; }
         [Required, MaxLength(100)]
         public string Location { get; set; }

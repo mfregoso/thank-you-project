@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -20,6 +21,17 @@ namespace TYP.Web.Controllers.Api
         public StoryController(IStoryService storyService)
         {
             this.storyService = storyService;
+        }
+
+        [Route("test"), HttpGet]
+        public HttpResponseMessage TestStuff(string ThankeeName, int StoryId)
+        {
+            //string siteURL = ConfigurationManager.AppSettings["SiteUrlOrigin"];
+            //SendGridService.Main();
+            string test = "thank you " + ThankeeName + " " + StoryId.ToString();
+            string storyUrl = "https://thankyouproject.azurewebsites.net/view/" + test.ToLower().Replace(" ", "-");
+
+            return Request.CreateResponse(HttpStatusCode.OK, storyUrl);
         }
 
         [Route, HttpGet]
