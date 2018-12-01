@@ -5,6 +5,16 @@
   "proxy": {
     "/api/": {
       "target": "http://localhost:50544/"
+    },
+    "/Scripts/": {
+      "target": "http://localhost:50544/"
+    },
+    "/signalr/hubs/": {
+      "target": "http://localhost:50544/"
+    },
+    "/signalr/": {
+      "target": "http://localhost:50544/",
+      "ws": true
     }
   },
   "dependencies": {

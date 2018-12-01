@@ -36,11 +36,11 @@ namespace TYP.Services.Services
 
             var apiKey = ApiKeys.SendGrid();
             var client = new SendGridClient(apiKey);
-            var from = new EmailAddress("no-reply@thank-you-project.com", "Thank You Project");
+            var from = new EmailAddress("no-reply@thankyouproject.azurewebsites.net", "Thank You Project");
             var subject = "You have a Thank You Story from " + PosterName;
             var to = new EmailAddress(ThankeeEmail, ThankeeName);
-            var plainTextContent = "Your story on the Thank You Project can be found at: " + storyUrl;
-            var htmlContent = "Click here to view your story on the Thank You Project: " + "<a href='" + storyUrl + "'>" + storyUrl + "</a>";
+            var plainTextContent = "Read all abou it here: " + storyUrl;
+            var htmlContent = "Read all about it here: " + "<a href='" + storyUrl + "'>" + storyUrl + "</a>";
             var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
             var response = await client.SendEmailAsync(msg);
 
