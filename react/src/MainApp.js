@@ -5,6 +5,7 @@ import LandingPage from "./components/LandingPage";
 import SubmitStory from "./components/SubmitStory";
 import ViewStories from "./components/ViewStories";
 import ViewStory from "./components/ViewStory";
+import ViewLatestStories from "./components/LatestStories/ViewLatestStories";
 
 class Routes extends Component {
   render() {
@@ -27,6 +28,10 @@ class Routes extends Component {
           <Route
             path="/discover"
             render={props => <ViewStories {...props} />}
+          />
+          <Route
+            path="/latest"
+            render={props => <ViewLatestStories {...props} />}
           />
         </Switch>
       </div>

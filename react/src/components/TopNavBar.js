@@ -31,7 +31,7 @@ class TopNavBar extends Component {
             href="javascript:(0)"
             onClick={() => this.props.history.push("/")}
           >
-            TYP <small>by mfregoso</small>
+            TYP {/*  <small>by mfregoso</small> */}
           </NavbarBrand>
           <NavbarToggler onClick={this.toggleMenu} />
           <Collapse isOpen={this.state.isOpen} navbar>
