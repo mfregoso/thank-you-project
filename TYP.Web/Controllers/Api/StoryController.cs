@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -9,7 +7,6 @@ using TYP.Models.Domain;
 using TYP.Models.Requests;
 using TYP.Models.Responses;
 using TYP.Services.Interfaces;
-using TYP.Services.Services;
 
 namespace TYP.Web.Controllers.Api
 

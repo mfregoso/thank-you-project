@@ -128,7 +128,8 @@ class SubmitStory extends Component {
     if (this.state.inEditMode) {
       formData.id = this.state.storyId;
     } else {
-      formData.thankeeEmail = this.state.thankeeEmail;
+      let { thankeeEmail } = this.state;
+      if (thankeeEmail) formData.thankeeEmail = thankeeEmail;
     }
     return formData;
   };

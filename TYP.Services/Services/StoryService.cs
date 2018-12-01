@@ -20,7 +20,7 @@ namespace TYP.Services.Services
 
         public List<StorySnippet> GetLatestStories(int Index, int PageSize)
         {
-            int MAX_PAGESIZE = 30;
+            const int MAX_PAGESIZE = 30;
             List<StorySnippet> latest = new List<StorySnippet>();
 
             using (SqlConnection sql = new SqlConnection(connectionString))
@@ -142,6 +142,8 @@ namespace TYP.Services.Services
                     cmd.ExecuteNonQuery();
 
                     int storyId = (int)cmd.Parameters["@Id"].Value;
+
+                    Task.Run(() => LatestStoriesService.SendNewStory(story, storyId));
 
                     if (story.ThankeeEmail != null)
                     {

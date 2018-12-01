@@ -24,6 +24,9 @@ class ViewLatestStories extends Component {
     this.signalR.client.usersMsgReceipt = message => {
       alert(message);
     };
+    this.signalR.client.updateFromServer = newStory => {
+      this.setState({ stories: [newStory, ...this.state.stories] });
+    };
     $.connection.hub
       .start()
       .done(() => {
