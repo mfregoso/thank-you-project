@@ -28,7 +28,7 @@ class TopNavBar extends Component {
           style={{ marginBottom: "3em" }}
         >
           <NavbarBrand
-            href="javascript:(0)"
+            href="#" //javascript:(0)
             onClick={() => this.props.history.push("/")}
           >
             TYP {/*  <small>by mfregoso</small> */}
@@ -38,7 +38,7 @@ class TopNavBar extends Component {
             <Nav className="ml-auto" navbar>
               <NavItem>
                 <NavLink
-                  href="javascript:(0)"
+                  href="#"
                   className="pointer"
                   active={location.pathname === "/discover"}
                   onClick={() => this.props.history.push("/discover")}
@@ -48,7 +48,7 @@ class TopNavBar extends Component {
               </NavItem>
               <NavItem>
                 <NavLink
-                  href="javascript:(0)"
+                  href="#"
                   active={location.pathname === "/share"}
                   onClick={() => this.props.history.push("/share")}
                 >
@@ -57,7 +57,7 @@ class TopNavBar extends Component {
               </NavItem>
 
               <NavItem>
-                <NavLink href="javascript:(0)">My Account</NavLink>
+                <NavLink href="#">My Account</NavLink>
               </NavItem>
             </Nav>
           </Collapse>

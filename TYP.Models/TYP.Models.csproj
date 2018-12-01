@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\Story.cs" />
+    <Compile Include="Domain\StorySnippet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Requests\CreateStory.cs" />
     <Compile Include="Requests\UpdateStory.cs" />

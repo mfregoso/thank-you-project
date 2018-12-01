@@ -43,3 +43,10 @@ export function GetNearbyStories(lat, long, radius = 7) {
     url: `/api/stories?Lat=${lat}&Lng=${long}&Radius=${radius}` // future: radius distance?
   });
 }
+
+export function GetLatestStories(index = 0, pageSize = 10) {
+  return axios({
+    method: "get",
+    url: `/api/stories/latest?Index=${index}&Size=${pageSize}`
+  });
+}

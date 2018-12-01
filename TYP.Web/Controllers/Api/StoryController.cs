@@ -32,6 +32,17 @@ namespace TYP.Web.Controllers.Api
             return Request.CreateResponse(HttpStatusCode.OK, siteURL);
         }
 
+        [Route("latest"), HttpGet]
+        public HttpResponseMessage GetLatestStoriesPaged(int Index = 0, int Size = 10)
+        {
+            ItemsResponse<StorySnippet> stories = new ItemsResponse<StorySnippet>();
+
+            List<StorySnippet> latest = storyService.GetLatestStories(Index, Size);
+            stories.Items = latest;
+
+            return Request.CreateResponse(HttpStatusCode.OK, stories);
+        }
+
         [Route, HttpGet]
         public HttpResponseMessage GetByLocation(string Lat, string Lng, int Radius)
         {

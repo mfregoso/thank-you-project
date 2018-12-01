@@ -18,6 +18,39 @@ namespace TYP.Services.Services
         private readonly string connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
         private readonly int MAX_DISTANCE_MILES = 20;
 
+        public List<StorySnippet> GetLatestStories(int Index, int PageSize)
+        {
+            int MAX_PAGESIZE = 30;
+            List<StorySnippet> latest = new List<StorySnippet>();
+
+            using (SqlConnection sql = new SqlConnection(connectionString))
+            {
+                sql.Open();
+                using (SqlCommand cmd = sql.CreateCommand())
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandText = "Story_SelectNewestPaged";
+                    cmd.Parameters.AddWithValue("@Index", Index);
+                    cmd.Parameters.AddWithValue("@PageSize", Math.Min(PageSize, MAX_PAGESIZE));
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        StorySnippet story = new StorySnippet()
+                        {
+                            Id = (int)reader["Id"],
+                            PosterName = (string)reader["PosterName"],
+                            ThankeeName = (string)reader["ThankeeName"],
+                            Location = (string)reader["Location"]
+                        };
+                        latest.Add(story);
+                    };
+                }
+            }
+
+            return latest;
+        }
+
         public List<Story> GetNearbyStories(string Lat, string Lng, int Radius)
         {
             List<Story> stories = new List<Story>();
