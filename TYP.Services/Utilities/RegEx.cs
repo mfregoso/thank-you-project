@@ -9,28 +9,31 @@ namespace TYP.Services.Utilities
 {
     public class RegEx
     {
-        public static string GetSlug(string value)
+        public static string GetSlugUrl(string ThankeeName, int StoryId)
         {
             // credit: https://stackoverflow.com/posts/14538799/revisions
-            value = value.ToLowerInvariant();
+            ThankeeName = ThankeeName.ToLowerInvariant();
 
             //Remove all accents
-            var bytes = Encoding.GetEncoding("Cyrillic").GetBytes(value);
-            value = Encoding.ASCII.GetString(bytes);
+            var bytes = Encoding.GetEncoding("Cyrillic").GetBytes(ThankeeName);
+            ThankeeName = Encoding.ASCII.GetString(bytes);
 
             //Replace spaces
-            value = Regex.Replace(value, @"\s", "-", RegexOptions.Compiled);
+            ThankeeName = Regex.Replace(ThankeeName, @"\s", "-", RegexOptions.Compiled);
 
             //Remove invalid chars
-            value = Regex.Replace(value, @"[^a-z0-9\s-_]", "", RegexOptions.Compiled);
+            ThankeeName = Regex.Replace(ThankeeName, @"[^a-z0-9\s-_]", "", RegexOptions.Compiled);
 
             //Trim dashes from end
-            value = value.Trim('-', '_');
+            ThankeeName = ThankeeName.Trim('-', '_');
 
             //Replace double occurences of - or _
-            value = Regex.Replace(value, @"([-_]){2,}", "$1", RegexOptions.Compiled);
+            ThankeeName = Regex.Replace(ThankeeName, @"([-_]){2,}", "$1", RegexOptions.Compiled);
 
-            return value;
+            string slug = "thank-you-" + ThankeeName + "-" + StoryId.ToString();
+            string storyUrl = "https://thankyouproject.azurewebsites.net/view/" + slug;
+
+            return storyUrl;
         }
     }
 }

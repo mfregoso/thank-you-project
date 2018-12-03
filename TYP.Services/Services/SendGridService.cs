@@ -31,8 +31,7 @@ namespace TYP.Services.Services
 
         public static async Task<Response> NotifyRecipient(string ThankeeEmail, string ThankeeName, string PosterName, int StoryId)
         {
-            string test = "thank you " + RegEx.GetSlug(ThankeeName) + " " + StoryId.ToString();
-            string storyUrl = "https://thankyouproject.azurewebsites.net/view/" + test.Replace(" ", "-");
+            string storyUrl = RegEx.GetSlugUrl(ThankeeName, StoryId);
 
             var apiKey = ApiKeys.SendGrid();
             var client = new SendGridClient(apiKey);
