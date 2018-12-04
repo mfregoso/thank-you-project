@@ -55,7 +55,7 @@ class ViewLatestStories extends Component {
         className="col-xl-5 col-lg-6 col-md-7 col-sm-10 col-xs-12 mx-auto text-center"
         style={{ paddingBottom: "2em", marginTop: "-1em" }}
       >
-        <h1 className="landing-page-spacer">Latest Thank You Stories</h1>
+        <h1 className="landing-page-spacer">Latest Stories</h1>
 
         <div className="results-container">
           <table className="table table-light table-bordered table-striped">

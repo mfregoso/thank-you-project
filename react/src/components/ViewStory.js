@@ -118,7 +118,7 @@ class ViewStory extends Component {
             </div>
             <div className="text-center mx-auto">
               <embed
-                width="390"
+                width="370"
                 height="190"
                 frameborder="0"
                 style={{ border: 0 }}

@@ -25,6 +25,7 @@ import {
   DeleteStory
 } from "../services/story.service";
 import SweetAlert from "react-bootstrap-sweetalert";
+import getStoryUrl from "../utilities/getViewUrl";
 
 class SubmitStory extends Component {
   state = {
@@ -43,10 +44,10 @@ class SubmitStory extends Component {
     disableAutocomplete: false,
     storyDate: moment().local(), // set moment("2018-08-16"),
     publishDate: moment().local(),
-    notifyDate: moment().local(),
-    notifyTime: moment()
-      .local()
-      .add(30, "minutes"), //new Date(new Date().setHours(new Date().getHours() + 2)))
+    // notifyDate: moment().local(),
+    // notifyTime: moment()
+    //   .local()
+    //   .add(30, "minutes"), //new Date(new Date().setHours(new Date().getHours() + 2)))
     validation: {
       thankeeName: true,
       thankeeEmail: true,
@@ -70,7 +71,6 @@ class SubmitStory extends Component {
           posterName: story.posterName,
           location: story.location || "",
           description: story.description || "",
-          //thankeeEmail: story.thankeeEmail || "",
           publishDate: moment(story.publishDate.substr(0, 10)),
           latitude: story.latitude,
           longitude: story.longitude,
@@ -88,6 +88,16 @@ class SubmitStory extends Component {
         let storyId = parseInt(tempId, 10);
         GetStoryById(storyId).then(resp => setFormValues(resp.data.item));
       }
+    }
+
+    if (this.props.location.search === "?DavidCanlas") {
+      this.setState({
+        thankeeName: "David Canlas",
+        location: "YPI TechHire",
+        latitude: 34.0703559,
+        longitude: -118.2802667,
+        disableAutocomplete: true
+      });
     }
   } // END of DidMount
 
@@ -170,7 +180,10 @@ class SubmitStory extends Component {
     } else {
       let data = this.getFormData();
       CreateStory(data)
-        .then(resp => this.props.history.push("/discover"))
+        .then(resp => {
+          let url = getStoryUrl(this.state.thankeeName, resp.data.item);
+          this.props.history.push(url);
+        })
         .catch(err => console.log(err));
     }
   };
@@ -448,7 +461,7 @@ class SubmitStory extends Component {
             </div>
           </div>
         </div>
-        {!this.state.inEditMode && (
+        {!this.state.inEditMode === "remove" && (
           <FormGroup>
             <Label>&nbsp;Notify The Recipient of This Story</Label>
             <Input

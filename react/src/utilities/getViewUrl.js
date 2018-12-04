@@ -1,4 +1,4 @@
-const getViewUrl = (thankeeName = "", id = "") => {
+const getViewUrl = (thankeeName = "", id) => {
   let slugName = thankeeName
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")

@@ -29,10 +29,15 @@ class ViewStories extends Component {
 
   GetStoriesByLocation = (lat, lng, radius) => {
     this.setState({ isLoading: true });
-    GetNearbyStories(lat, lng, radius).then(resp => {
-      let stories = this.reformatStories(resp.data.items);
-      this.setState({ stories, isLoading: false });
-    });
+    GetNearbyStories(lat, lng, radius)
+      .then(resp => {
+        let stories = this.reformatStories(resp.data.items);
+        this.setState({ stories, isLoading: false });
+      })
+      .catch(err => {
+        console.log(err);
+        this.setState({ isLoading: false });
+      });
   };
 
   componentDidMount() {
@@ -54,6 +59,13 @@ class ViewStories extends Component {
       //   this.props.sendLongitude(lng);
       // });
     }
+  }
+
+  componentWillUnmount() {
+    let { latitude, longitude, zoomLevel } = this.state;
+    this.props.sendMapZoom(zoomLevel);
+    this.props.sendLatitude(latitude);
+    this.props.sendLongitude(longitude);
   }
 
   componentDidUpdate(prevProps) {
@@ -121,9 +133,9 @@ class ViewStories extends Component {
   };
 
   handleMapChanges = info => {
-    let zoom = info.zoom;
-    let mapLatitude = info.center.lat;
-    let mapLongitude = info.center.lng;
+    let zoomLevel = info.zoom;
+    let latitude = info.center.lat;
+    let longitude = info.center.lng;
     // let ne = info.bounds.ne;
     // let nw = info.bounds.nw;
     // let se = info.bounds.se;
@@ -132,9 +144,10 @@ class ViewStories extends Component {
     // console.log(`${nw.lng} ${nw.lat}`);
     // console.log(`${sw.lng} ${sw.lat}`);
     // console.log(`${se.lng} ${se.lat}`);
-    this.props.sendMapZoom(zoom);
-    this.props.sendLatitude(mapLatitude);
-    this.props.sendLongitude(mapLongitude);
+    // this.props.sendMapZoom(zoomLevel);
+    // this.props.sendLatitude(latitude);
+    // this.props.sendLongitude(longitude);
+    this.setState({ latitude, longitude, zoomLevel });
   };
 
   render() {
@@ -282,8 +295,9 @@ class ViewStories extends Component {
               lng: this.props.userLongitude || -118.3966412
             }}
             center={{
-              lat: this.state.latitude || 33.9860021,
-              lng: this.state.longitude || -118.3966412
+              lat: this.state.latitude || this.props.userLatitude || 33.9860021,
+              lng:
+                this.state.longitude || this.props.userLongitude || -118.3966412
             }}
             defaultZoom={this.props.mapZoom || 13}
             //zoom={this.state.zoomLevel}
