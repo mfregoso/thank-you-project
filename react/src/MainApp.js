@@ -6,6 +6,7 @@ import SubmitStory from "./components/SubmitStory";
 import ViewStories from "./components/ViewStories";
 import ViewStory from "./components/ViewStory";
 import ViewLatestStories from "./components/LatestStories/ViewLatestStories";
+import GetGeolocation from "./utilities/getUserGeolocation";
 
 class Routes extends Component {
   render() {
@@ -34,6 +35,7 @@ class Routes extends Component {
             render={props => <ViewLatestStories {...props} />}
           />
         </Switch>
+        <GetGeolocation />
       </div>
     );
   }

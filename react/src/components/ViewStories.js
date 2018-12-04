@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { GetNearbyStories } from "../services/story.service";
-//import GetUserLocation from "../services/googleGeolocate.service";
 import GoogleMapReact from "google-map-react";
 import PlacesAutocomplete, {
   geocodeByAddress,
@@ -12,7 +11,6 @@ import MapMarkers from "./MapMarkers";
 import moment from "moment";
 import ResultRow from "./ResultRow";
 import ViewStoryModal from "./ViewStoryModal";
-import "../css/custom.css";
 
 class ViewStories extends Component {
   state = {
@@ -32,7 +30,12 @@ class ViewStories extends Component {
     GetNearbyStories(lat, lng, radius)
       .then(resp => {
         let stories = this.reformatStories(resp.data.items);
-        this.setState({ stories, isLoading: false });
+        this.setState({
+          stories,
+          isLoading: false,
+          latitude: lat,
+          longitude: lng
+        });
       })
       .catch(err => {
         console.log(err);
@@ -40,24 +43,15 @@ class ViewStories extends Component {
       });
   };
 
+  initializeStories = () =>
+    this.GetStoriesByLocation(
+      this.props.userLatitude,
+      this.props.userLongitude
+    );
+
   componentDidMount() {
     if (this.props.userLongitude && this.props.userLatitude) {
-      this.setState({
-        latitude: this.props.userLatitude,
-        longitude: this.props.userLongitude
-      });
-      this.GetStoriesByLocation(
-        this.props.userLatitude,
-        this.props.userLongitude
-      );
-    }
-    if (!this.props.userLongitude && !this.props.userLatitude) {
-      //this.props.history.push("/");
-      // GetUserLocation().then(resp => {
-      //   let { lat, lng } = resp.data.location;
-      //   this.props.sendLatitude(lat);
-      //   this.props.sendLongitude(lng);
-      // });
+      this.initializeStories();
     }
   }
 
@@ -73,11 +67,7 @@ class ViewStories extends Component {
       !prevProps.userLongitude &&
       this.props.userLongitude !== prevProps.userLongitude
     ) {
-      // catch for first-time visitors landing on /discover and missing geo-location in redux
-      this.GetStoriesByLocation(
-        this.props.userLatitude,
-        this.props.userLongitude
-      );
+      this.initializeStories();
     }
   }
 
