@@ -1,17 +1,13 @@
 import React, { Component } from "react";
 import { Modal, ModalHeader, ModalBody } from "reactstrap";
 import { withRouter } from "react-router";
+import getUrl from "../utilities/getViewUrl";
 import "../css/custom.css";
 
 class ViewStoryModal extends Component {
   render() {
     const { story } = this.props;
-    const computeSlug = input =>
-      input
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-+|-+$/g, "-")
-        .replace(/^-+|-+$/g, "");
+    let storyUrl = getUrl(story.thankeeName, story.id);
 
     return (
       <React.Fragment>
@@ -45,13 +41,7 @@ class ViewStoryModal extends Component {
                 <button
                   className="float-right btn btn-sm btn-muted"
                   style={{ position: "relative", top: "-0.5em" }}
-                  onClick={() =>
-                    this.props.history.push(
-                      `/view/thank-you-${computeSlug(story.thankeeName)}-${
-                        story.id
-                      }`
-                    )
-                  }
+                  onClick={() => this.props.history.push(storyUrl)}
                 >
                   Permalink
                 </button>

@@ -59,14 +59,14 @@ class ViewStory extends Component {
       posterName,
       isLoading,
       dayOfStory,
-      location
+      location,
+      latitude,
+      longitude
     } = this.state;
 
     const showStory = () => {
       if (!thankeeName && isLoading) {
-        return (
-            <h3 className="text-center">Loading...</h3>
-        );
+        return <h3 className="text-center">Loading...</h3>;
       } else if (!thankeeName) {
         return (
           <div className="mx-auto text-center">
@@ -80,7 +80,7 @@ class ViewStory extends Component {
                 href="javascript:(0)"
                 onClick={() => this.props.history.push("/share")}
               >
-                Share a Story
+                Share a Thank You Story
               </a>
               ?
             </h3>
@@ -112,8 +112,19 @@ class ViewStory extends Component {
             </div>
             <br />
             <div>
+              <p>
+                This story happened on {dayOfStory} at {location}.
+              </p>
+            </div>
+            <div className="text-center mx-auto">
+              <embed
+                width="390"
+                height="190"
+                frameborder="0"
+                style={{ border: 0 }}
+                src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBcBHH4tjzT73Zms3uDoCun9GaNy-Ue5QQ&q=${latitude},${longitude}&maptype=roadmap&zoom=17`}
+              />
               {/* Visual improvement needed here */}
-              This story happened on {dayOfStory} at {location}.
             </div>
             <br />
           </React.Fragment>

@@ -27,7 +27,7 @@ class ViewStories extends Component {
     isLoading: false
   };
 
-  GetByLocation = (lat, lng, radius) => {
+  GetStoriesByLocation = (lat, lng, radius) => {
     this.setState({ isLoading: true });
     GetNearbyStories(lat, lng, radius).then(resp => {
       let stories = this.reformatStories(resp.data.items);
@@ -41,7 +41,10 @@ class ViewStories extends Component {
         latitude: this.props.userLatitude,
         longitude: this.props.userLongitude
       });
-      this.GetByLocation(this.props.userLatitude, this.props.userLongitude);
+      this.GetStoriesByLocation(
+        this.props.userLatitude,
+        this.props.userLongitude
+      );
     }
     if (!this.props.userLongitude && !this.props.userLatitude) {
       this.props.history.push("/");
@@ -87,7 +90,7 @@ class ViewStories extends Component {
           longitude: latLng.lng,
           zoomLevel: 14
         });
-        this.GetByLocation(latLng.lat, latLng.lng);
+        this.GetStoriesByLocation(latLng.lat, latLng.lng);
       })
       .catch(error => console.error("Error", error));
   };
@@ -115,17 +118,17 @@ class ViewStories extends Component {
     let zoom = info.zoom;
     let mapLatitude = info.center.lat;
     let mapLongitude = info.center.lng;
-    let ne = info.bounds.ne;
-    let nw = info.bounds.nw;
-    let se = info.bounds.se;
-    let sw = info.bounds.sw;
-    console.log(`${ne.lng} ${ne.lat}`);
-    console.log(`${nw.lng} ${nw.lat}`);
-    console.log(`${sw.lng} ${sw.lat}`);
-    console.log(`${se.lng} ${se.lat}`);
-    // this.props.sendMapZoom(zoom);
-    // this.props.sendMapLatitude(mapLatitude);
-    // this.props.sendMapLongitude(mapLongitude);
+    // let ne = info.bounds.ne;
+    // let nw = info.bounds.nw;
+    // let se = info.bounds.se;
+    // let sw = info.bounds.sw;
+    // console.log(`${ne.lng} ${ne.lat}`);
+    // console.log(`${nw.lng} ${nw.lat}`);
+    // console.log(`${sw.lng} ${sw.lat}`);
+    // console.log(`${se.lng} ${se.lat}`);
+    this.props.sendMapZoom(zoom);
+    this.props.sendLatitude(mapLatitude);
+    this.props.sendLongitude(mapLongitude);
   };
 
   render() {
@@ -276,10 +279,10 @@ class ViewStories extends Component {
               lat: this.state.latitude || 33.9860021,
               lng: this.state.longitude || -118.3966412
             }}
-            defaultZoom={14}
-            zoom={this.state.zoomLevel || 12}
+            defaultZoom={this.props.mapZoom || 13}
+            //zoom={this.state.zoomLevel}
             options={mapOptions}
-            //onChange={this.handleMapChanges} // callback with all kinds of useful information
+            onChange={this.handleMapChanges} // callback with all kinds of useful information
           >
             {(this.state.filteredStories || this.state.stories).map(
               (story, index) => {
