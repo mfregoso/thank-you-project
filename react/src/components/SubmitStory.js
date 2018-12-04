@@ -12,7 +12,7 @@ import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng
 } from "react-places-autocomplete";
-import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
 import moment from "moment";
 import DatePicker from "react-datepicker";
 import "../css/react-datepicker.css";
@@ -144,6 +144,10 @@ class SubmitStory extends Component {
           latitude: latLng.lat,
           longitude: latLng.lng
         });
+        if (!this.props.mapZoom) {
+          this.props.sendLatitude(latLng.lat);
+          this.props.sendLongitude(latLng.lng);
+        }
       })
       .catch(error => console.error("Error", error));
   };
@@ -564,4 +568,22 @@ class SubmitStory extends Component {
   }
 }
 
-export default withRouter(SubmitStory);
+const mapDispatchToProps = dispatch => {
+  return {
+    sendLatitude: setLatitude =>
+      dispatch({ type: "SET_USER_LATITUDE", setLatitude }),
+    sendLongitude: setLongitude =>
+      dispatch({ type: "SET_USER_LONGITUDE", setLongitude })
+  };
+};
+
+const mapStateToProps = state => {
+  return {
+    mapZoom: state.mapZoom
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SubmitStory);

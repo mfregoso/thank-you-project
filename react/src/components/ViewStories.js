@@ -47,7 +47,7 @@ class ViewStories extends Component {
       );
     }
     if (!this.props.userLongitude && !this.props.userLatitude) {
-      this.props.history.push("/");
+      //this.props.history.push("/");
       // GetUserLocation().then(resp => {
       //   let { lat, lng } = resp.data.location;
       //   this.props.sendLatitude(lat);
@@ -57,9 +57,15 @@ class ViewStories extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.userLatitude !== prevProps.userLatitude) {
-      // catch Location Change => re-render map & maybe get new data from server
-      console.log(this.props.userLatitude + ", " + this.props.userLongitude);
+    if (
+      !prevProps.userLongitude &&
+      this.props.userLongitude !== prevProps.userLongitude
+    ) {
+      // catch for first-time visitors landing on /discover and missing geo-location in redux
+      this.GetStoriesByLocation(
+        this.props.userLatitude,
+        this.props.userLongitude
+      );
     }
   }
 
