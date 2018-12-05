@@ -94,8 +94,8 @@ class SubmitStory extends Component {
       this.setState({
         thankeeName: "David Canlas",
         location: "YPI TechHire",
-        latitude: 34.0703559,
-        longitude: -118.2802667,
+        latitude: 34.070205,
+        longitude: -118.277955,
         disableAutocomplete: true
       });
     }
