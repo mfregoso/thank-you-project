@@ -11,12 +11,14 @@ import MapMarkers from "./MapMarkers";
 import moment from "moment";
 import ResultRow from "./ResultRow";
 import ViewStoryModal from "./ViewStoryModal";
+import getDistance from "../utilities/calcDistance";
 
 class ViewStories extends Component {
   state = {
     stories: [],
     latitude: null,
     longitude: null,
+    cachedCenter: [null, null],
     isGeocoding: false,
     location: "",
     filteredStories: null,
@@ -26,15 +28,15 @@ class ViewStories extends Component {
   };
 
   GetStoriesByLocation = (lat, lng, radius) => {
-    this.setState({ isLoading: true });
+    this.setState({ isLoading: true, cachedCenter: [lat, lng] });
     GetNearbyStories(lat, lng, radius)
       .then(resp => {
         let stories = this.reformatStories(resp.data.items);
         this.setState({
           stories,
-          isLoading: false,
-          latitude: lat,
-          longitude: lng
+          isLoading: false
+          // latitude: lat,
+          // longitude: lng
         });
       })
       .catch(err => {
@@ -43,11 +45,16 @@ class ViewStories extends Component {
       });
   };
 
-  initializeStories = () =>
+  initializeStories = () => {
     this.GetStoriesByLocation(
       this.props.userLatitude,
       this.props.userLongitude
     );
+    this.setState({
+      latitude: this.props.userLatitude,
+      longitude: this.props.userLongitude
+    });
+  };
 
   componentDidMount() {
     if (this.props.userLongitude && this.props.userLatitude) {
@@ -134,16 +141,23 @@ class ViewStories extends Component {
     // console.log(`${nw.lng} ${nw.lat}`);
     // console.log(`${sw.lng} ${sw.lat}`);
     // console.log(`${se.lng} ${se.lat}`);
-    // this.props.sendMapZoom(zoomLevel);
-    // this.props.sendLatitude(latitude);
-    // this.props.sendLongitude(longitude);
     this.setState({ latitude, longitude, zoomLevel });
+    this.checkForOtherStories([latitude, longitude]);
+  };
+
+  checkForOtherStories = currentCenter => {
+    let mapDifference = getDistance(currentCenter, this.state.cachedCenter);
+    if (mapDifference >= 6) {
+      let lat = currentCenter[0];
+      let lng = currentCenter[1];
+      this.GetStoriesByLocation(lat, lng);
+    }
   };
 
   render() {
     const mapOptions = {
       scrollwheel: true,
-      minZoom: 12
+      minZoom: 13
       // hide: [
       //   {
       //     featureType: "all",
