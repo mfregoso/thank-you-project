@@ -57,7 +57,7 @@ class ViewLatestStories extends Component {
       >
         <h1 className="landing-page-spacer">Latest Stories</h1>
 
-        <div className="results-container">
+        <div>
           <table className="table table-light table-bordered table-striped">
             <tbody>
               {this.state.isLoading && loadingMessage()}

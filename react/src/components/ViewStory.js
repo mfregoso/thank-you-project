@@ -10,7 +10,7 @@ class ViewStory extends Component {
     location: "",
     dayOfStory: "",
     description: "",
-    isLoading: true
+    isLoading: false
   };
 
   componentDidMount() {
@@ -18,8 +18,14 @@ class ViewStory extends Component {
       let checkId = /^\d+$/;
       let tempId = this.props.match.params.slug.split("-").pop();
       if (checkId.test(tempId)) {
+        this.setState({ isLoading: true });
         let storyId = parseInt(tempId, 10);
-        GetStoryById(storyId).then(resp => this.setFormValues(resp.data.item));
+        GetStoryById(storyId)
+          .then(resp => this.setFormValues(resp.data.item))
+          .catch(err => {
+            console.log(err);
+            this.setState({ isLoading: false });
+          });
       }
     }
   }

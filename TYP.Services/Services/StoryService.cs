@@ -179,13 +179,13 @@ namespace TYP.Services.Services
 
                     Task.Run(() => LatestStoriesService.SendNewStory(story, storyId));
 
-                    if (story.ThankeeEmail != null)
-                    {
-                        Task.Run(async() =>
-                        {
-                            await SendGridService.NotifyRecipient(story.ThankeeEmail, story.ThankeeName, story.PosterName, storyId);
-                        });
-                    }
+                    //if (story.ThankeeEmail != null)
+                    //{
+                    //    Task.Run(async() =>
+                    //    {
+                    //        await SendGridService.NotifyRecipient(story.ThankeeEmail, story.ThankeeName, story.PosterName, storyId);
+                    //    });
+                    //}
 
                     return storyId;
                 }

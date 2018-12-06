@@ -1,15 +1,19 @@
 import { Component } from "react";
 import GetUserLocation from "../services/googleGeolocate.service";
 import { connect } from "react-redux";
+import { withRouter } from "react-router";
 
 class GetGeoLocation extends Component {
   componentDidMount() {
-    if (!this.props.userLongitude && !this.props.userLatitude) {
-      GetUserLocation().then(resp => {
-        let { lat, lng } = resp.data.location;
-        this.props.sendLatitude(lat);
-        this.props.sendLongitude(lng);
-      });
+    let url = this.props.location.pathname;
+    if (!url.startsWith("/view")) {
+      if (!this.props.userLongitude && !this.props.userLatitude) {
+        GetUserLocation().then(resp => {
+          let { lat, lng } = resp.data.location;
+          this.props.sendLatitude(lat);
+          this.props.sendLongitude(lng);
+        });
+      }
     }
   }
 
@@ -37,4 +41,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(GetGeoLocation);
+)(withRouter(GetGeoLocation));

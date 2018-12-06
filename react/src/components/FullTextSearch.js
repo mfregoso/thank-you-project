@@ -73,7 +73,7 @@ class AdvancedSearch extends Component {
         </button>
         <p />
 
-        <div className="results-container">
+        <div>
           <table className="table table-light table-bordered table-striped">
             <tbody>
               {this.state.isLoading && loadingMessage()}

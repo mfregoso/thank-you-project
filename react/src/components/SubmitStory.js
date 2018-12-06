@@ -461,7 +461,7 @@ class SubmitStory extends Component {
             </div>
           </div>
         </div>
-        {!this.state.inEditMode && (
+        {!this.state.inEditMode === "disableForNow" && (
           <FormGroup>
             <Label>&nbsp;Optional: Notify The Recipient of This Story</Label>
             <Input
