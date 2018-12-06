@@ -1,4 +1,4 @@
-export function detectEnterKey(event) {
+export default function detectEnterKey(event) {
   if (event.key === "Enter") {
     event.preventDefault();
     event.stopPropagation();

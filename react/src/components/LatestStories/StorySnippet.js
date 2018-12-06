@@ -1,6 +1,8 @@
 import React from "react";
+import getStoryUrl from "../../utilities/getViewUrl";
 
 const StorySnippet = ({ story }) => {
+  let url = getStoryUrl(story.thankeeName, story.id);
   return (
     <React.Fragment>
       <tr>
@@ -12,11 +14,7 @@ const StorySnippet = ({ story }) => {
           </div>
         </td>
         <td className="align-middle">
-          <a
-            href={`/view/${story.id}`}
-            target="_blank"
-            className="btn btn-sm btn-success"
-          >
+          <a href={`${url}`} target="_blank" className="btn btn-sm btn-success">
             View
           </a>
         </td>

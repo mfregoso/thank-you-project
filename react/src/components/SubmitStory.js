@@ -461,13 +461,13 @@ class SubmitStory extends Component {
             </div>
           </div>
         </div>
-        {!this.state.inEditMode === "remove" && (
+        {!this.state.inEditMode && (
           <FormGroup>
-            <Label>&nbsp;Notify The Recipient of This Story</Label>
+            <Label>&nbsp;Optional: Notify The Recipient of This Story</Label>
             <Input
               type="text"
               name="thankeeEmail"
-              placeholder="Email Address (NOT YET IMPLEMENTED)"
+              placeholder="Email Address"
               maxLength="100"
               value={this.state.thankeeEmail}
               onChange={e => {

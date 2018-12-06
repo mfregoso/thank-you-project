@@ -21,16 +21,16 @@ class ViewLatestStories extends Component {
     this.GetNewestByPage(0, 10);
 
     this.signalR = $.connection.storyHub;
-    this.signalR.client.usersMsgReceipt = message => {
-      alert(message);
-    };
+    // this.signalR.client.usersMsgReceipt = message => {
+    //alert(message);
+    // };
     this.signalR.client.updateFromServer = newStory => {
       this.setState({ stories: [newStory, ...this.state.stories] });
     };
     $.connection.hub
       .start()
       .done(() => {
-        console.log("Now connected, connection ID= ", $.connection.hub.id);
+        console.log("SignalR Connection ID: ", $.connection.hub.id);
       })
       .fail(function(err) {
         console.log(err);
@@ -67,15 +67,6 @@ class ViewLatestStories extends Component {
             </tbody>
           </table>
         </div>
-
-        <button
-          className="btn btn-lg btn-block btn-dark pointer"
-          onClick={() =>
-            $.connection.storyHub.server.notifyAllUsers("Hi from signalR")
-          }
-        >
-          Test SignalR
-        </button>
       </div>
     );
   }

@@ -50,3 +50,10 @@ export function GetLatestStories(index = 0, pageSize = 10) {
     url: `/api/stories/latest?Index=${index}&Size=${pageSize}`
   });
 }
+
+export function FullTextSearch(query, index = 0, pageSize = 30) {
+  return axios({
+    method: "get",
+    url: `/api/stories/search?Query=${query}&Index=${index}&Size=${pageSize}`
+  });
+}

@@ -29,6 +29,16 @@ namespace TYP.Web.Controllers.Api
             return Request.CreateResponse(HttpStatusCode.OK, siteURL);
         }
 
+        [Route("search"), HttpGet]
+        public HttpResponseMessage StoriesFullTextSearch(string Query = null, int Index = 0, int Size = 30)
+        {
+            if (Query == null) return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Search term is empty!");
+
+            List<StorySnippet> results = storyService.FullTextSearch(Query, Index, Size);
+
+            return Request.CreateResponse(HttpStatusCode.OK, new ItemsResponse<StorySnippet> { Items = results });
+        }
+
         [Route("latest"), HttpGet]
         public HttpResponseMessage GetLatestStoriesPaged(int Index = 0, int Size = 10)
         {

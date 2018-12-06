@@ -57,7 +57,23 @@ class TopNavBar extends Component {
               </NavItem>
 
               <NavItem>
-                <NavLink href="#">My Account</NavLink>
+                <NavLink
+                  href="#"
+                  active={location.pathname === "/latest"}
+                  onClick={() => this.props.history.push("/latest")}
+                >
+                  Latest Stories
+                </NavLink>
+              </NavItem>
+
+              <NavItem>
+                <NavLink
+                  href="#"
+                  active={location.pathname === "/search"}
+                  onClick={() => this.props.history.push("/search")}
+                >
+                  Search
+                </NavLink>
               </NavItem>
             </Nav>
           </Collapse>

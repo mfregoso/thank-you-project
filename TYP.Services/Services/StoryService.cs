@@ -51,6 +51,40 @@ namespace TYP.Services.Services
             return latest;
         }
 
+        public List<StorySnippet> FullTextSearch(string Query, int Index, int PageSize)
+        {
+            const int MAX_PAGESIZE = 30;
+            List<StorySnippet> results = new List<StorySnippet>();
+
+            using (SqlConnection sql = new SqlConnection(connectionString))
+            {
+                sql.Open();
+                using (SqlCommand cmd = sql.CreateCommand())
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandText = "Story_FTSearch";
+                    cmd.Parameters.AddWithValue("@Query", Query);
+                    cmd.Parameters.AddWithValue("@Index", Index);
+                    cmd.Parameters.AddWithValue("@PageSize", Math.Min(PageSize, MAX_PAGESIZE));
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        StorySnippet story = new StorySnippet()
+                        {
+                            Id = (int)reader["Id"],
+                            PosterName = (string)reader["PosterName"],
+                            ThankeeName = (string)reader["ThankeeName"],
+                            Location = (string)reader["Location"]
+                        };
+                        results.Add(story);
+                    };
+                }
+            }
+
+            return results;
+        }
+
         public List<Story> GetNearbyStories(string Lat, string Lng, int Radius)
         {
             List<Story> stories = new List<Story>();

@@ -7,6 +7,7 @@ import ViewStories from "./components/ViewStories";
 import ViewStory from "./components/ViewStory";
 import ViewLatestStories from "./components/LatestStories/ViewLatestStories";
 import GetGeolocation from "./utilities/getUserGeolocation";
+import FullTextSearch from "./components/FullTextSearch";
 
 class Routes extends Component {
   render() {
@@ -33,6 +34,10 @@ class Routes extends Component {
           <Route
             path="/latest"
             render={props => <ViewLatestStories {...props} />}
+          />
+          <Route
+            path="/search"
+            render={props => <FullTextSearch {...props} />}
           />
         </Switch>
         <GetGeolocation />
