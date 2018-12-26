@@ -42,7 +42,7 @@ class SubmitStory extends Component {
     thankeeEmail: "",
     storyId: null,
     disableAutocomplete: false,
-    storyDate: moment().local(), // set moment("2018-08-16"),
+    storyDate: moment().local(),
     publishDate: moment().local(),
     // notifyDate: moment().local(),
     // notifyTime: moment()
@@ -89,17 +89,7 @@ class SubmitStory extends Component {
         GetStoryById(storyId).then(resp => setFormValues(resp.data.item));
       }
     }
-
-    if (this.props.location.search === "?DavidCanlas") {
-      this.setState({
-        thankeeName: "David Canlas",
-        location: "YPI TechHire",
-        latitude: 34.070205,
-        longitude: -118.277955,
-        disableAutocomplete: true
-      });
-    }
-  } // END of DidMount
+  }
 
   componentDidUpdate(prevProps) {
     if (
@@ -124,7 +114,6 @@ class SubmitStory extends Component {
   }
 
   getFormData = () => {
-    // to-do? notificate date + time + validation?
     const formData = {
       thankeeName: this.state.thankeeName,
       location: this.state.location,
@@ -206,7 +195,6 @@ class SubmitStory extends Component {
 
   confirmedDeleteEvent = () => {
     this.setState({ deleteWarning: false });
-    //alert("confirmed delete for " + this.state.storyId);
     if (this.state.storyId) {
       DeleteStory(this.state.storyId).then(
         this.props.history.push("/discover")
