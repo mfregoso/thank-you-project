@@ -163,9 +163,10 @@ class SubmitStory extends Component {
   handleSubmission = () => {
     if (this.state.inEditMode) {
       let data = this.getFormData();
-      UpdateStory(this.state.storyId, data).then(resp =>
-        console.log(resp.data)
-      );
+      UpdateStory(this.state.storyId, data).then(() => {
+        let url = getStoryUrl(data.thankeeName, this.state.storyId);
+        this.props.history.push(url);
+      });
     } else {
       let data = this.getFormData();
       CreateStory(data)
