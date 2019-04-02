@@ -22,6 +22,29 @@
       property="og:image"
       content="https://thankyouproject.azurewebsites.net/typ.png"
     />
+    <style>
+      .logo {
+        animation: scale 2.5s linear infinite;
+        width: 60vw;
+        max-width: 350px;
+        margin-bottom: 5vh;
+      }
+      @keyframes scale {
+        50% {
+          -webkit-transform: scale(1.3);
+          -moz-transform: scale(1.3);
+          -ms-transform: scale(1.3);
+          -o-transform: scale(1.3);
+          transform: scale(1.3);
+        }
+      }
+      .loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+    </style>
     <!-- <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico"> -->
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
@@ -37,7 +60,15 @@
 
   <body>
     <noscript> You need to enable JavaScript to run this app. </noscript>
-    <div id="root"><h1>Loading...</h1></div>
+    <div id="root">
+      <div class="loading">
+        <img
+          src="https://thankyouproject.azurewebsites.net/static/media/typ-logo.86428b77.png"
+          class="logo"
+          alt=""
+        />
+      </div>
+    </div>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBcBHH4tjzT73Zms3uDoCun9GaNy-Ue5QQ&libraries=places,maps"></script>
     <script src="/Scripts/jquery-1.6.4.min.js"></script>
