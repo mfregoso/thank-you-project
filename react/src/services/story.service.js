@@ -30,17 +30,10 @@ export function GetStoryById(id) {
   });
 }
 
-export function GetAllStories() {
-  return axios({
-    method: "get",
-    url: "/api/stories"
-  });
-}
-
 export function GetNearbyStories(lat, long, radius = 7) {
   return axios({
     method: "get",
-    url: `/api/stories?Lat=${lat}&Lng=${long}&Radius=${radius}` // future: radius distance?
+    url: `/api/stories?Lat=${lat}&Lng=${long}&Radius=${radius}`
   });
 }
 
