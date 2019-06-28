@@ -1,8 +1,17 @@
 import React from "react";
+import { withRouter } from "react-router";
 import getStoryUrl from "../../utilities/getViewUrl";
+import {getHref} from "../../utilities";
 
-const StorySnippet = ({ story }) => {
-  let url = getStoryUrl(story.thankeeName, story.id);
+const StorySnippet = (props) => {
+  const {story, history} = props;
+  const url = getStoryUrl(story.thankeeName, story.id);
+
+  const handleClick = event => {
+    const urlPath = getHref(event);
+    history.push(urlPath);
+  };
+
   return (
     <React.Fragment>
       <tr>
@@ -14,7 +23,7 @@ const StorySnippet = ({ story }) => {
           </div>
         </td>
         <td className="align-middle">
-          <a href={`${url}`} target="_blank" className="btn btn-sm btn-success">
+          <a href={url} className="btn btn-sm btn-success" onClick={handleClick}>
             View
           </a>
         </td>
@@ -23,4 +32,4 @@ const StorySnippet = ({ story }) => {
   );
 };
 
-export default StorySnippet;
+export default withRouter(StorySnippet);

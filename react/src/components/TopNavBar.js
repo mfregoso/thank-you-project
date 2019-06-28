@@ -9,6 +9,7 @@ import {
   NavItem,
   NavLink
 } from "reactstrap";
+import {getHref} from "../utilities";
 
 class TopNavBar extends Component {
   state = {
@@ -16,6 +17,11 @@ class TopNavBar extends Component {
   };
 
   toggleMenu = () => this.setState({ isOpen: !this.state.isOpen });
+
+  handleNavClick = event => {
+    const urlPath = getHref(event);
+    this.props.history.push(urlPath);
+  }
 
   render() {
     const { location } = this.props;
@@ -28,8 +34,8 @@ class TopNavBar extends Component {
           style={{ marginBottom: "3em" }}
         >
           <NavbarBrand
-            href="#" //javascript:(0)
-            onClick={() => this.props.history.push("/")}
+            href="/"
+            onClick={this.handleNavClick}
           >
             TYP {/*  <small>by mfregoso</small> */}
           </NavbarBrand>
@@ -38,19 +44,19 @@ class TopNavBar extends Component {
             <Nav className="ml-auto" navbar>
               <NavItem>
                 <NavLink
-                  href="#"
+                  href="/discover"
                   className="pointer"
                   active={location.pathname === "/discover"}
-                  onClick={() => this.props.history.push("/discover")}
+                  onClick={this.handleNavClick}
                 >
                   Discover Stories
                 </NavLink>
               </NavItem>
               <NavItem>
                 <NavLink
-                  href="#"
+                  href="/share"
                   active={location.pathname === "/share"}
-                  onClick={() => this.props.history.push("/share")}
+                  onClick={this.handleNavClick}
                 >
                   Share a Story
                 </NavLink>
@@ -58,9 +64,9 @@ class TopNavBar extends Component {
 
               <NavItem>
                 <NavLink
-                  href="#"
+                  href="/latest"
                   active={location.pathname === "/latest"}
-                  onClick={() => this.props.history.push("/latest")}
+                  onClick={this.handleNavClick}
                 >
                   Latest Stories
                 </NavLink>
@@ -68,9 +74,9 @@ class TopNavBar extends Component {
 
               <NavItem>
                 <NavLink
-                  href="#"
+                  href="/search"
                   active={location.pathname === "/search"}
-                  onClick={() => this.props.history.push("/search")}
+                  onClick={this.handleNavClick}
                 >
                   Search
                 </NavLink>

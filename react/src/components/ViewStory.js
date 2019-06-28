@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { GetStoryById } from "../services/story.service";
 import moment from "moment";
 import logo from "../img/typ-logo.png";
+import {getHref} from "../utilities";
 
 class ViewStory extends Component {
   state = {
@@ -58,6 +59,11 @@ class ViewStory extends Component {
     };
   };
 
+  handleLinkClick = event => {
+    const href = getHref(event);
+    this.props.history.push(href);
+  }
+
   render() {
     const {
       thankeeName,
@@ -83,8 +89,8 @@ class ViewStory extends Component {
             <h3>
               Would you like to{" "}
               <a
-                href="javascript:(0)"
-                onClick={() => this.props.history.push("/share")}
+                href="/share"
+                onClick={this.handleLinkClick}
               >
                 Share a Thank You Story
               </a>
@@ -126,7 +132,7 @@ class ViewStory extends Component {
               <embed
                 width="370"
                 height="190"
-                frameborder="0"
+                frameBorder="0"
                 style={{ border: 0 }}
                 src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBcBHH4tjzT73Zms3uDoCun9GaNy-Ue5QQ&q=${latitude},${longitude}&maptype=roadmap&zoom=17`}
               />
