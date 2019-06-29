@@ -274,3 +274,6 @@ package-lock.json
 TYP.Web/Web.Azure.config
 TYP.Web/AzureSql.config
 TYP.Services/ApiKeys.cs
+
+# wwwroot
+TYP/wwwroot
